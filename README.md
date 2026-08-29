@@ -78,6 +78,8 @@ read tools with a compatibility-aware planner is a deliberate design choice, not
 **Choose the official server** for breadth, or if you don't need to see the code.
 **Choose this one** if you need your data to stay on your infrastructure, want to audit or
 extend what the model can do, or want writes that cannot fire on the first call.
+**Choose [getmcpads.com](https://www.getmcpads.com)** if you want this server's capabilities
+without running it, or you need more than one ad platform in the same conversation.
 
 ---
 
@@ -304,6 +306,19 @@ Concretely:
   You can verify this by grepping the source for `fetch`.
 
 Full policy and reporting instructions: [SECURITY.md](SECURITY.md).
+
+---
+
+## Looking for a managed, multi-platform version?
+
+This server does one platform, on your machine, with your token. That is on purpose.
+
+If you'd rather not run it yourself, or you need TikTok Ads **alongside Meta Ads, Google Ads,
+Pinterest Ads, GA4 and Search Console** behind one endpoint, with hosted OAuth and
+cross-platform reporting, that's what we build at **[getmcpads.com](https://www.getmcpads.com)**.
+
+Same philosophy, less plumbing. This project stays open source and independently useful
+either way.
 
 ---
 
