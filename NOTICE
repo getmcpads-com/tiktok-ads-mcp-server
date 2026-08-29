@@ -1,0 +1,17 @@
+tiktok-ads-mcp-server
+Copyright 2026 GetMCPAds
+
+This product includes software developed at GetMCPAds (https://www.getmcpads.com).
+
+An open-source Model Context Protocol server for the TikTok Business API.
+It is self-hosted and unaffiliated with TikTok or ByteDance.
+
+GetMCPAds also runs a managed gateway that covers TikTok Ads alongside
+Meta Ads, Google Ads, Pinterest Ads, GA4 and Search Console, with hosted
+OAuth and cross-platform reporting: https://www.getmcpads.com
+
+---
+
+TikTok and TikTok for Business are trademarks of ByteDance Ltd. and its
+affiliates. This project is not affiliated with, endorsed by, or sponsored
+by TikTok or ByteDance.
