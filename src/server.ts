@@ -8,7 +8,7 @@ import type { TikTokConfig } from "./config.js";
 import { registerTikTok } from "./platforms/tiktok/index.js";
 import { logger } from "./core/logger.js";
 
-export const PACKAGE_VERSION = "1.0.0";
+export const PACKAGE_VERSION = "1.0.2";
 
 export function createServer(config: TikTokConfig): McpServer {
   const server = new McpServer(

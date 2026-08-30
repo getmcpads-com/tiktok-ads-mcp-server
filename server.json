@@ -3,7 +3,7 @@
   "name": "com.getmcpads/tiktok-ads",
   "title": "TikTok Ads",
   "description": "TikTok Ads: 27 read tools, 277 metrics, and 5 write tools that preview before applying.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "websiteUrl": "https://www.getmcpads.com/tools/tiktok-ads",
   "repository": {
     "url": "https://github.com/getmcpads-com/tiktok-ads-mcp-server",
@@ -14,7 +14,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@getmcpads/tiktok-ads-mcp-server",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "transport": {
         "type": "stdio"
       },
