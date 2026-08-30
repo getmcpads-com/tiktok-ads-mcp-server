@@ -14,6 +14,8 @@ You run it. Your token stays on your machine. Nothing is proxied through a third
 npx -y @getmcpads/tiktok-ads-mcp-server
 ```
 
+Also listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as **`com.getmcpads/tiktok-ads`**, so clients that read the registry can install it by name.
+
 > **Prefer not to run it yourself?** [getmcpads.com](https://www.getmcpads.com) is the hosted
 > version of this server, with TikTok Ads alongside Meta Ads, Google Ads, Pinterest Ads, GA4 and
 > Search Console behind a single endpoint, hosted OAuth, and cross-platform reporting.

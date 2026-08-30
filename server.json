@@ -1,0 +1,55 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.getmcpads/tiktok-ads",
+  "title": "TikTok Ads",
+  "description": "TikTok Ads: 27 read tools, 277 metrics, and 5 write tools that preview before applying.",
+  "version": "1.0.1",
+  "websiteUrl": "https://www.getmcpads.com/tools/tiktok-ads",
+  "repository": {
+    "url": "https://github.com/getmcpads-com/tiktok-ads-mcp-server",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@getmcpads/tiktok-ads-mcp-server",
+      "version": "1.0.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TIKTOK_ACCESS_TOKEN",
+          "description": "TikTok Business API access token.",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "TIKTOK_APP_ID",
+          "description": "App ID the token belongs to.",
+          "isRequired": true,
+          "isSecret": false
+        },
+        {
+          "name": "TIKTOK_APP_SECRET",
+          "description": "App secret, for endpoints needing app authentication.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "TIKTOK_ADVERTISER_ID",
+          "description": "Default advertiser ID.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "TIKTOK_ENABLE_WRITES",
+          "description": "Set to 1 to register the 5 write tools.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

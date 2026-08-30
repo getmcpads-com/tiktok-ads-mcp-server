@@ -1,6 +1,7 @@
 {
   "name": "@getmcpads/tiktok-ads-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "mcpName": "com.getmcpads/tiktok-ads",
   "description": "Open-source MCP server for the TikTok Business API. 27 read tools and 5 write tools that preview before they apply, 277 metrics, 16 dimensions, keyword research. Self-hosted, bring your own token.",
   "license": "Apache-2.0",
   "type": "module",
@@ -66,7 +67,7 @@
     "type": "git",
     "url": "git+https://github.com/getmcpads-com/tiktok-ads-mcp-server.git"
   },
-  "homepage": "https://github.com/getmcpads-com/tiktok-ads-mcp-server#readme",
+  "homepage": "https://www.getmcpads.com/tools/tiktok-ads",
   "bugs": {
     "url": "https://github.com/getmcpads-com/tiktok-ads-mcp-server/issues"
   },
