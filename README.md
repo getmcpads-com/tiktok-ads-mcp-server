@@ -57,17 +57,17 @@ TikTok ships an official MCP server, announced at TikTok World '26 and hosted at
 `business-api.tiktok.com/open_mcp/`. It is a serious product, and it is bigger than this one.
 Here is an honest comparison.
 
-| | TikTok's official server | This server | [getmcpads.com](https://www.getmcpads.com) |
+| | **This server** | TikTok's official server | [getmcpads.com](https://www.getmcpads.com) |
 |---|---|---|---|
-| Hosting | TikTok-hosted, remote | **You host it.** stdio, local process | Hosted for you |
-| Data path | Through TikTok's endpoint | **Direct to the Business API.** No intermediary | Through our gateway |
-| Tools | ~400 flat, or ~40 in layered mode | **32** (27 read + 5 write) | 32, plus 5 other platforms |
-| Coverage | Far broader | Reporting, structure, creatives, audiences | Same as this server |
-| Writes | Applied directly | **Preview first**, applied only on `confirm: true` | Preview first |
-| Metric compatibility | None documented | **Query planner splits incompatible requests** | Same planner |
-| HTTP 200 on failure | Handled internally | **Checked on every call** | Checked |
-| Auditable | No | **Yes.** Apache-2.0, read every line | This server, audited |
-| Modifiable | No | **Fork it** | No |
+| Hosting | **You host it.** stdio, local process | TikTok-hosted, remote | Hosted for you |
+| Data path | **Direct to the Business API.** No intermediary | Through TikTok's endpoint | Through our gateway |
+| Tools | **32** (27 read + 5 write) | ~400 flat, or ~40 in layered mode | 32, plus 5 other platforms |
+| Coverage | Reporting, structure, creatives, audiences | **Far broader** | Same as this server |
+| Writes | **Preview first**, applied only on `confirm: true` | Applied directly | Preview first |
+| Metric compatibility | **Query planner splits incompatible requests** | None documented | Same planner |
+| HTTP 200 on failure | **Checked on every call** | Handled internally | Checked |
+| Auditable | **Yes.** Apache-2.0, read every line | No | This server, audited |
+| Modifiable | **Fork it** | No | No |
 
 **Be clear about the trade-off.** If you want the widest possible surface of the TikTok API,
 the official server covers far more endpoints than this one does, and you should use it.
