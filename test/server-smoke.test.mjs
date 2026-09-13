@@ -38,7 +38,7 @@ test("TikTok Ads MCP exposes core tools and resources over stdio", async () => {
     await client.connect(transport, { timeout: 15000 });
     const tools = await client.listTools(undefined, { timeout: 15000 });
     const toolNames = tools.tools.map((tool) => tool.name);
-    assert.equal(toolNames.length, 27);
+    assert.equal(toolNames.length, 33);
 
     for (const name of [
       "tiktok_health_check",
@@ -66,7 +66,7 @@ test("TikTok Ads MCP exposes core tools and resources over stdio", async () => {
 
     const manifest = await client.readResource({ uri: "tiktok://manifest" }, { timeout: 15000 });
     const manifestPayload = JSON.parse(manifest.contents[0].text);
-    assert.equal(manifestPayload.tools.length, 27);
+    assert.equal(manifestPayload.tools.length, 33);
     assert.ok(manifestPayload.tools.some((tool) => tool.name === "tiktok_get_read_endpoint"));
   } finally {
     await transport.close().catch(() => undefined);

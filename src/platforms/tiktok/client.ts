@@ -22,6 +22,7 @@ import {
 import { mergeResults, buildRequestBody } from "./query-planner.js";
 import { enrichWithCalculatedMetrics } from "./calculated-metrics.js";
 import { findMissingMetricsInRow, getNativeMetrics } from "./metric-catalog.js";
+import { NO_REDIRECT, refuseRedirect } from "../../core/redirects.js";
 
 /** Prevent Access-Token forwarding to non-TikTok hosts or API versions. */
 export function assertSafeTikTokApiUrl(rawEndpoint: string): URL {
@@ -215,7 +216,8 @@ export class TikTokClient {
       logger.debug("tiktok", `Making request to: ${redactSecrets(url)}`);
       logger.debug("tiktok", "Access-Token: [redacted]");
 
-      const response = await fetch(url, options);
+      const response = await fetch(url, { ...options, redirect: "error" });
+      refuseRedirect(response, "TikTok Business API");
       logger.debug("tiktok", `Response status: ${response.status}`);
 
       if (!response.ok) {
@@ -271,6 +273,7 @@ export class TikTokClient {
       };
 
       const response = await fetch(url, { method: "GET", headers, redirect: "error" });
+      refuseRedirect(response, "TikTok Business API");
 
       if (!response.ok) {
         let errorBody = "";
@@ -351,6 +354,28 @@ export class TikTokClient {
   /**
    * Fetch campaigns by IDs, returns id->name map
    */
+  /**
+   * Exécute des lots en parallèle, mais pas tous à la fois.
+   *
+   * Ces trois méthodes enchaînaient leurs lots en série. Sur un compte de huit
+   * cents annonces cela fait neuf requêtes l'une après l'autre, et l'ensemble
+   * dépassait le délai : toute demande de métriques au niveau annonce échouait,
+   * alors que le niveau campagne, qui tient en une requête, répondait. Le
+   * symptôme ne désignait rien, puisque l'erreur venait du temps total et pas
+   * d'un appel identifiable.
+   *
+   * Quatre de front, et pas davantage : TikTok limite le débit par compte, et
+   * lancer neuf requêtes simultanées échangerait une panne de délai contre une
+   * panne de quota.
+   */
+  private async inBatches<T, R>(items: T[], size: number, run: (item: T) => Promise<R>): Promise<R[]> {
+    const out: R[] = [];
+    for (let i = 0; i < items.length; i += size) {
+      out.push(...(await Promise.all(items.slice(i, i + size).map(run))));
+    }
+    return out;
+  }
+
   async getCampaignNames(advertiserId: string, campaignIds: string[]): Promise<Map<string, string>> {
     const nameMap = new Map<string, string>();
     if (campaignIds.length === 0) return nameMap;
@@ -361,7 +386,7 @@ export class TikTokClient {
       chunks.push(campaignIds.slice(i, i + 100));
     }
 
-    for (const chunk of chunks) {
+    await this.inBatches(chunks, 4, async (chunk) => {
       try {
         const params = new URLSearchParams();
         params.set("advertiser_id", advertiserId);
@@ -380,7 +405,7 @@ export class TikTokClient {
       } catch (e) {
         logger.warn("tiktok", "Failed to fetch campaign names", e);
       }
-    }
+    });
     return nameMap;
   }
 
@@ -396,7 +421,7 @@ export class TikTokClient {
       chunks.push(adGroupIds.slice(i, i + 100));
     }
 
-    for (const chunk of chunks) {
+    await this.inBatches(chunks, 4, async (chunk) => {
       try {
         const params = new URLSearchParams();
         params.set("advertiser_id", advertiserId);
@@ -415,43 +440,73 @@ export class TikTokClient {
       } catch (e) {
         logger.warn("tiktok", "Failed to fetch adgroup names", e);
       }
-    }
+    });
     return nameMap;
   }
 
   /**
-   * Fetch ads by IDs, returns id->name map
+   * Les annonces par identifiant : leur nom, et les assets qu'elles utilisent.
+   *
+   * Les deux ensemble, dans la même requête, parce que `/ad/get/` les rend
+   * ensemble. Joindre des métriques à des créatives demandait sinon un appel
+   * de plus par lot, sur un endpoint plafonné à cinquante annonces, ce qui ne
+   * tenait pas sur un compte qui en a près de six cents. Ici c'est gratuit :
+   * deux champs ajoutés à un appel qui a lieu de toute façon.
+   *
+   * L'identifiant plutôt que le nom, aussi, parce que deux annonces d'une même
+   * créative portent des noms différents dès que le nom encode la campagne. Le
+   * nom sert à lire, l'identifiant à joindre.
    */
-  async getAdNames(advertiserId: string, adIds: string[]): Promise<Map<string, string>> {
-    const nameMap = new Map<string, string>();
-    if (adIds.length === 0) return nameMap;
+  async getAdDetails(
+    advertiserId: string,
+    adIds: string[],
+  ): Promise<Map<string, { name: string; assets: string[] }>> {
+    const details = new Map<string, { name: string; assets: string[] }>();
+    if (adIds.length === 0) return details;
 
     const chunks = [];
     for (let i = 0; i < adIds.length; i += 100) {
       chunks.push(adIds.slice(i, i + 100));
     }
 
-    for (const chunk of chunks) {
+    await this.inBatches(chunks, 4, async (chunk) => {
       try {
         const params = new URLSearchParams();
         params.set("advertiser_id", advertiserId);
-        params.set("filtering", JSON.stringify({ ad_ids: chunk }));
-        params.set("fields", JSON.stringify(["ad_id", "ad_name"]));
+        params.set("filtering", JSON.stringify({ ad_ids: chunk, primary_status: "STATUS_ALL" }));
+        params.set("fields", JSON.stringify(["ad_id", "ad_name", "video_id", "image_ids"]));
         params.set("page_size", "100");
 
         const response = await this.request<{
           code: number;
-          data: { list: Array<{ ad_id: string; ad_name: string }> };
+          data: {
+            list: Array<{ ad_id: string; ad_name: string; video_id?: string; image_ids?: string[] }>;
+          };
         }>(`ad/get/?${params.toString()}`, "GET");
 
         response.data?.list?.forEach((a) => {
-          nameMap.set(String(a.ad_id), a.ad_name);
+          const assets: string[] = [];
+          const video = typeof a.video_id === "string" && a.video_id ? a.video_id : null;
+          if (video) assets.push(video);
+
+          // Une annonce vidéo range sa propre couverture dans `image_ids`.
+          //
+          // Vérifié sur le compte de test : chaque annonce vidéo rend deux
+          // entrées, l'identifiant de la vidéo et le chemin de sa vignette. La
+          // compter comme un visuel distinct faisait croire à un partage
+          // d'annonce, donc à une dépense comptée plusieurs fois, sur des
+          // créatives qui ne partagent rien. Quand il y a une vidéo, les images
+          // de l'annonce sont sa couverture et non des créatives.
+          if (!video && Array.isArray(a.image_ids)) {
+            assets.push(...a.image_ids.map(String).filter(Boolean));
+          }
+          details.set(String(a.ad_id), { name: a.ad_name, assets });
         });
       } catch (e) {
-        logger.warn("tiktok", "Failed to fetch ad names", e);
+        logger.warn("tiktok", "Failed to fetch ad details", e);
       }
-    }
-    return nameMap;
+    });
+    return details;
   }
 
   /**
@@ -479,7 +534,9 @@ export class TikTokClient {
     const [campaignNames, adGroupNames, adNames] = await Promise.all([
       campaignIds.length > 0 ? this.getCampaignNames(advertiserId, campaignIds) : new Map<string, string>(),
       adGroupIds.length > 0 ? this.getAdGroupNames(advertiserId, adGroupIds) : new Map<string, string>(),
-      adIds.length > 0 ? this.getAdNames(advertiserId, adIds) : new Map<string, string>(),
+      adIds.length > 0
+        ? this.getAdDetails(advertiserId, adIds)
+        : new Map<string, { name: string; assets: string[] }>(),
     ]);
 
     // Enrich rows
@@ -492,7 +549,12 @@ export class TikTokClient {
         enriched.adgroup_name = adGroupNames.get(String(row.adgroup_id)) || "";
       }
       if (hasAdId && row.ad_id) {
-        enriched.ad_name = adNames.get(String(row.ad_id)) || "";
+        const ad = adNames.get(String(row.ad_id));
+        enriched.ad_name = ad?.name ?? "";
+        // Les assets utilisés par cette annonce, ramenés sans requête de plus.
+        // C'est ce qui permet de joindre des métriques à des visuels : sans
+        // eux, une ligne de rapport ne sait pas à quoi elle ressemble.
+        if (ad && ad.assets.length > 0) enriched.asset_ids = ad.assets;
       }
       return enriched;
     });
@@ -564,6 +626,16 @@ export class TikTokClient {
     let currentPage = 1;
     let hasMore = true;
 
+    // Le plafond de lignes, et le plafond de pages qui en découle.
+    //
+    // Un Worker n'a droit qu'à cinquante sous-requêtes par invocation, toutes
+    // confondues : la base, les jetons, et chaque page de rapport. Dépasser ne
+    // rend pas une réponse partielle, ça tue l'invocation entière. Le garde
+    // précédent était fixé à cent pages, soit le double de ce que le runtime
+    // autorise, donc il ne gardait rien.
+    const maxRows = typeof request.max_rows === "number" ? request.max_rows : Infinity;
+    const MAX_PAGES = 8;
+
     while (hasMore) {
       const pageRequest = { ...request, page: currentPage };
       const response = await this.fetchBasicReport(pageRequest);
@@ -584,9 +656,10 @@ export class TikTokClient {
         hasMore = false;
       }
 
-      // Safety limit to prevent infinite loops
-      if (currentPage > 100) {
-        logger.warn("tiktok", "Reached page limit of 100");
+      if (allRows.length >= maxRows) break;
+
+      if (currentPage > MAX_PAGES) {
+        logger.warn("tiktok", `Stopped at ${MAX_PAGES} pages to stay inside the Worker subrequest budget`);
         break;
       }
     }

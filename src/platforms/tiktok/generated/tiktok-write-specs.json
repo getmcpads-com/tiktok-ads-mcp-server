@@ -1,0 +1,3271 @@
+{
+  "source": "https://github.com/tiktok/tiktok-business-api-sdk",
+  "revision": "f809c396520df2d7b201a9ccc5378d822b728ed3",
+  "models": {
+    "CampaignCreateBody": {
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "app_promotion_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "budget_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "budget_optimize_on": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "campaign_app_profile_page_state": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "campaign_name": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "campaign_product_source": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "campaign_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "catalog_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "deep_bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "disable_skan_campaign": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "internal_channel": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "is_advanced_dedicated_campaign": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "is_search_campaign": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "objective_type": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "operation_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "optimization_goal": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "plugin_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "po_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "postback_window_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "request_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "rf_campaign_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "roas_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "rta_bid_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "rta_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "rta_product_selection_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "sales_destination": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "special_industries": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "virtual_objective_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "CampaignUpdateBody": {
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "campaign_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "campaign_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "po_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "special_industries": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "AdgroupCreateBody": {
+      "actions": {
+        "type": "AdgroupcreateActions",
+        "array": true,
+        "required": false
+      },
+      "adgroup_app_profile_page_state": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "adgroup_name": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "age_groups": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "app_config": {
+        "type": "AdgroupcreateAppConfig",
+        "array": true,
+        "required": false
+      },
+      "app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "attribution_event_count": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "audience_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "audience_rule": {
+        "type": "Object",
+        "array": false,
+        "required": false
+      },
+      "audience_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "automated_keywords_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "bid_display_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "billing_event": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "blocked_pangle_app_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "brand_safety_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "brand_safety_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": true
+      },
+      "budget_mode": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "campaign_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "carrier_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "catalog_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "catalog_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "category_exclusion_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "click_attribution_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "comment_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "contextual_tag_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "conversion_bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "creative_material_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "custom_conversion_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dayparting": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_cpa_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_event_source": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_event_source_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_optimization_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "device_model_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "device_price_ranges": {
+        "type": "Number",
+        "array": true,
+        "required": false
+      },
+      "engaged_view_attribution_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "excluded_audience_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "excluded_custom_actions": {
+        "type": "AdgroupcreateExcludedCustomActions",
+        "array": true,
+        "required": false
+      },
+      "excluded_pangle_audience_package_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "frequency": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "frequency_schedule": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "gender": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "household_income": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "identity_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "included_custom_actions": {
+        "type": "AdgroupcreateIncludedCustomActions",
+        "array": true,
+        "required": false
+      },
+      "included_pangle_audience_package_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "interest_category_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "interest_keyword_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "ios14_targeting": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "is_hfss": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "is_lhf_compliance": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "isp_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "languages": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "location_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "message_event_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "messaging_app_account_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "messaging_app_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "min_android_version": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "min_ios_version": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "network_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "next_day_retention": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "operating_systems": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "operation_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "optimization_goal": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "pacing": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "phone_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_calling_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "pixel_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "placement_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "placements": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "product_source": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotion_target_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotion_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotion_website_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "purchase_intention_keyword_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "request_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "roas_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "saved_audience_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_end_time": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_start_time": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "schedule_type": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "search_keywords": {
+        "type": "AdgroupcreateSearchKeywords",
+        "array": true,
+        "required": false
+      },
+      "search_result_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "secondary_optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "share_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_retargeting_actions_days": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_retargeting_custom_audience_relation": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_retargeting_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "skip_learning_phase": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "smart_audience_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "smart_interest_behavior_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "spending_power": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "statistic_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "store_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "store_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tiktok_subplacements": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "vbo_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "vertical_sensitivity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_download_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "view_attribution_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "zipcode_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "AdgroupcreateActions": {
+      "action_category_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "action_period": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "action_scene": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_user_actions": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "AdgroupcreateAppConfig": {
+      "app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdgroupcreateExcludedCustomActions": {
+      "code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "days": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdgroupcreateIncludedCustomActions": {
+      "code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "days": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdgroupcreateSearchKeywords": {
+      "keyword": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "keyword_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "keyword_bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "match_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdgroupUpdateBody": {
+      "actions": {
+        "type": "AdgroupcreateActions",
+        "array": true,
+        "required": false
+      },
+      "adgroup_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "adgroup_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "age_groups": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "audience_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "audience_rule": {
+        "type": "Object",
+        "array": false,
+        "required": false
+      },
+      "audience_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "auto_targeting_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "automated_keywords_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "blocked_pangle_app_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "brand_safety_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "carrier_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "catalog_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "category_exclusion_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "comment_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "contextual_tag_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "conversion_bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "dayparting": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_cpa_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_event_source": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_event_source_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_optimization_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "device_model_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "device_price_ranges": {
+        "type": "Number",
+        "array": true,
+        "required": false
+      },
+      "exclude_age_under_eighteen": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "excluded_audience_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "excluded_custom_actions": {
+        "type": "AdgroupcreateExcludedCustomActions",
+        "array": true,
+        "required": false
+      },
+      "excluded_pangle_audience_package_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "frequency": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "frequency_schedule": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "gender": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "household_income": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "included_custom_actions": {
+        "type": "AdgroupcreateIncludedCustomActions",
+        "array": true,
+        "required": false
+      },
+      "included_pangle_audience_package_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "interest_category_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "interest_keyword_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "ios14_targeting": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "is_hfss": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "is_lhf_compliance": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "isp_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "languages": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "location_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "min_android_version": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "min_ios_version": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "network_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "next_day_retention": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "operating_systems": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "pacing": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "purchase_intention_keyword_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "roas_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "saved_audience_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_end_time": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_start_time": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "search_keywords": {
+        "type": "AdgroupupdateSearchKeywords",
+        "array": true,
+        "required": false
+      },
+      "search_result_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "secondary_optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "share_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_retargeting_actions_days": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_retargeting_custom_audience_relation": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_retargeting_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "smart_audience_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "smart_interest_behavior_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "spending_power": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "targeting_expansion": {
+        "type": "AdgroupupdateTargetingExpansion",
+        "array": false,
+        "required": false
+      },
+      "vertical_sensitivity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "zipcode_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "AdgroupupdateSearchKeywords": {
+      "keyword": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "keyword_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "keyword_bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "match_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdgroupupdateTargetingExpansion": {
+      "expansion_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "expansion_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "AdCreateBody": {
+      "adgroup_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "creatives": {
+        "type": "AdcreateCreatives",
+        "array": true,
+        "required": true
+      }
+    },
+    "AdcreateCreatives": {
+      "ad_format": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_text": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_texts": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "aigc_disclosure_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "app_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "auto_disclaimer_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "auto_message_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "avatar_icon_web_uri": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "brand_safety_postbid_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "brand_safety_vast_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "call_to_action": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "call_to_action_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "card_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "carousel_image_index": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "catalog_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "click_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "cpp_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "creative_authorized": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "creative_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dark_post_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink_format_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink_utm_params": {
+        "type": "AdcreateDeeplinkUtmParams",
+        "array": true,
+        "required": false
+      },
+      "disclaimer_clickable_texts": {
+        "type": "AdcreateDisclaimerClickableTexts",
+        "array": true,
+        "required": false
+      },
+      "disclaimer_text": {
+        "type": "AdcreateDisclaimerText",
+        "array": false,
+        "required": false
+      },
+      "disclaimer_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "display_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dynamic_destination": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dynamic_format": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "end_card_cta": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "fallback_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "image_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "impression_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "instant_product_page_used": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "item_duet_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "item_group_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "item_stitch_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "landing_page_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "music_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "operation_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "page_id": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "page_image_index": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "phone_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_calling_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "playable_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "product_display_field_list": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "product_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "product_specific_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotional_music_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "schedule_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_deeplink_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_fallback_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_video_package_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "showcase_products": {
+        "type": "AdcreateShowcaseProducts",
+        "array": true,
+        "required": false
+      },
+      "sku_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "tiktok_item_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tiktok_page_category": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_message_event_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_offline_event_set_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "tracking_pixel_id": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "utm_params": {
+        "type": "AdcreateUtmParams",
+        "array": true,
+        "required": false
+      },
+      "vehicle_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "vertical_video_strategy": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_view_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "viewability_postbid_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "viewability_vast_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdcreateDeeplinkUtmParams": {
+      "key": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "value": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdcreateDisclaimerClickableTexts": {
+      "text": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdcreateDisclaimerText": {
+      "text": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdcreateShowcaseProducts": {
+      "catalog_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "item_group_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "store_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdcreateUtmParams": {
+      "key": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "value": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdUpdateBody": {
+      "adgroup_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "creatives": {
+        "type": "AdupdateCreatives",
+        "array": true,
+        "required": true
+      },
+      "patch_update": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      }
+    },
+    "AdupdateCreatives": {
+      "ad_format": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_text": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_texts": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "aigc_disclosure_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "app_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "avatar_icon_web_uri": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "brand_safety_postbid_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "brand_safety_vast_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "call_to_action": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "call_to_action_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "card_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "carousel_image_index": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "click_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "cpp_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "creative_authorized": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "creative_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dark_post_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink_utm_params": {
+        "type": "AdcreateDeeplinkUtmParams",
+        "array": true,
+        "required": false
+      },
+      "disclaimer_clickable_texts": {
+        "type": "AdcreateDisclaimerClickableTexts",
+        "array": true,
+        "required": false
+      },
+      "disclaimer_text": {
+        "type": "AdcreateDisclaimerText",
+        "array": false,
+        "required": false
+      },
+      "disclaimer_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "display_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dynamic_destination": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dynamic_format": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "end_card_cta": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "fallback_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "image_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "impression_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "instant_product_page_used": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "item_duet_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "item_group_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "item_stitch_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "landing_page_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "music_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "page_id": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "page_image_index": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "playable_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "product_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "product_specific_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotional_music_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_deeplink_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_fallback_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "shopping_ads_video_package_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "sku_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "tiktok_item_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_offline_event_set_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "tracking_pixel_id": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "utm_params": {
+        "type": "AdcreateUtmParams",
+        "array": true,
+        "required": false
+      },
+      "vast_moat_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "vertical_video_strategy": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_view_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "viewability_postbid_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "viewability_vast_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusCampaignCreateBody": {
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "app_promotion_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "bid_align_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "budget_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "budget_optimize_on": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "campaign_app_profile_page_state": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "campaign_name": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "campaign_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "catalog_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "catalog_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "disable_skan_campaign": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "is_advanced_dedicated_campaign": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "is_promotional_campaign": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "objective_type": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "open_api_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "operation_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "po_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "postback_window_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "request_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "sales_destination": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "special_industries": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "SmartPlusCampaignUpdateBody": {
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "campaign_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "campaign_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "po_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdgroupCreateBody": {
+      "adgroup_name": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "attribution_event_count": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "billing_event": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "budget_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "campaign_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "catalog_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "catalog_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "click_attribution_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "comment_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "conversion_bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "custom_conversion_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "dayparting": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_bid_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_cpabid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_event_source": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_event_source_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deep_funnel_optimization_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "engaged_view_attribution_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "message_event_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "messaging_app_account_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "messaging_app_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "min_budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "movie_premiere_date": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "open_api_partner": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "operation_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "optimization_event": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "optimization_goal": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "phone_info": {
+        "type": "SmartPlusAdgroupCreateBodyPhoneInfo",
+        "array": false,
+        "required": false
+      },
+      "pixel_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "placement_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "placements": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "product_source": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotion_target_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "promotion_type": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "promotion_website_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "request_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "roas_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "schedule_end_time": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_start_time": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "schedule_type": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "share_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "suggestion_audience_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "targeting_optimization_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "targeting_spec": {
+        "type": "SmartPlusAdgroupCreateBodyTargetingSpec",
+        "array": false,
+        "required": true
+      },
+      "vbo_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_download_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "view_attribution_window": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "zalo_id_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdgroupCreateBodyPhoneInfo": {
+      "phone_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_calling_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdgroupCreateBodyTargetingSpec": {
+      "actions": {
+        "type": "SmartPlusAdgroupCreateBodyTargetingSpecActions",
+        "array": true,
+        "required": false
+      },
+      "age_groups": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "audience_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "blocked_pangle_app_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "carrier_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "device_model_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "device_price_ranges": {
+        "type": "Number",
+        "array": true,
+        "required": false
+      },
+      "excluded_audience_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "excluded_pangle_audience_package_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "gender": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "household_income": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "included_pangle_audience_package_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "interest_category_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "interest_keyword_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "isp_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "languages": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "location_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "min_android_version": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "min_ios_version": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "network_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "operating_systems": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "purchase_intention_keyword_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "saved_audience_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "smart_audience_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "smart_interest_behavior_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "spc_audience_age": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "spending_power": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "zipcode_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "SmartPlusAdgroupCreateBodyTargetingSpecActions": {
+      "action_category_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "action_period": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "action_scene": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_user_actions": {
+        "type": "String",
+        "array": true,
+        "required": false
+      }
+    },
+    "SmartPlusAdgroupUpdateBody": {
+      "adgroup_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "adgroup_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "comment_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "conversion_bid_price": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "dayparting": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "min_budget": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "movie_premiere_date": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "pacing": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "roas_bid": {
+        "type": "Number",
+        "array": false,
+        "required": false
+      },
+      "schedule_end_time": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_start_time": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "schedule_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "share_disabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "suggestion_audience_enabled": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "targeting_optimization_mode": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "targeting_spec": {
+        "type": "SmartPlusAdgroupCreateBodyTargetingSpec",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBody": {
+      "ad_configuration": {
+        "type": "SmartPlusAdCreateBodyAdConfiguration",
+        "array": false,
+        "required": false
+      },
+      "ad_name": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "ad_text_list": {
+        "type": "SmartPlusAdCreateBodyAdTextList",
+        "array": true,
+        "required": false
+      },
+      "adgroup_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "auto_message_list": {
+        "type": "SmartPlusAdCreateBodyAutoMessageList",
+        "array": true,
+        "required": false
+      },
+      "call_to_action_list": {
+        "type": "SmartPlusAdCreateBodyCallToActionList",
+        "array": true,
+        "required": false
+      },
+      "creative_list": {
+        "type": "SmartPlusAdCreateBodyCreativeList",
+        "array": true,
+        "required": false
+      },
+      "deeplink_list": {
+        "type": "SmartPlusAdCreateBodyDeeplinkList",
+        "array": true,
+        "required": false
+      },
+      "interactive_add_on_list": {
+        "type": "SmartPlusAdCreateBodyInteractiveAddOnList",
+        "array": true,
+        "required": false
+      },
+      "landing_page_url_list": {
+        "type": "SmartPlusAdCreateBodyLandingPageUrlList",
+        "array": true,
+        "required": false
+      },
+      "operation_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "page_list": {
+        "type": "SmartPlusAdCreateBodyPageList",
+        "array": true,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyAdConfiguration": {
+      "auto_disclaimer_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "call_to_action_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "catalog_creative_toggle": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "dark_post_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "end_card_cta": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "fallback_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_info": {
+        "type": "SmartPlusAdCreateBodyAdConfigurationPhoneInfo",
+        "array": false,
+        "required": false
+      },
+      "product_display_field_list": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "product_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "product_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "product_specific_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_info": {
+        "type": "SmartPlusAdCreateBodyAdConfigurationTrackingInfo",
+        "array": false,
+        "required": false
+      },
+      "utm_params": {
+        "type": "SmartPlusAdCreateBodyAdConfigurationUtmParams",
+        "array": true,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyAdConfigurationPhoneInfo": {
+      "phone_number": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_calling_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_region_code": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyAdConfigurationTrackingInfo": {
+      "click_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "impression_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_message_event_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyAdConfigurationUtmParams": {
+      "key": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "value": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyAdTextList": {
+      "ad_text": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyAutoMessageList": {
+      "auto_message_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyCallToActionList": {
+      "call_to_action": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyCreativeList": {
+      "creative_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfo",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyCreativeInfo": {
+      "ad_format": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "aigc_disclosure_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "image_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfoImageInfo",
+        "array": true,
+        "required": false
+      },
+      "music_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfoMusicInfo",
+        "array": false,
+        "required": false
+      },
+      "tiktok_item_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfoVideoInfo",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyCreativeInfoImageInfo": {
+      "web_uri": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyCreativeInfoMusicInfo": {
+      "music_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyCreativeInfoVideoInfo": {
+      "file_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyDeeplinkList": {
+      "deeplink": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "deeplink_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyInteractiveAddOnList": {
+      "card_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdCreateBodyLandingPageUrlList": {
+      "landing_page_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdCreateBodyPageList": {
+      "page_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdUpdateBody": {
+      "ad_configuration": {
+        "type": "SmartPlusAdUpdateBodyAdConfiguration",
+        "array": false,
+        "required": false
+      },
+      "ad_name": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "ad_text_list": {
+        "type": "SmartPlusAdCreateBodyAdTextList",
+        "array": true,
+        "required": false
+      },
+      "advertiser_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "call_to_action_list": {
+        "type": "SmartPlusAdCreateBodyCallToActionList",
+        "array": true,
+        "required": false
+      },
+      "creative_list": {
+        "type": "SmartPlusAdUpdateBodyCreativeList",
+        "array": true,
+        "required": false
+      },
+      "deeplink_list": {
+        "type": "SmartPlusAdCreateBodyDeeplinkList",
+        "array": true,
+        "required": false
+      },
+      "interactive_add_on_list": {
+        "type": "SmartPlusAdCreateBodyInteractiveAddOnList",
+        "array": true,
+        "required": false
+      },
+      "landing_page_url_list": {
+        "type": "SmartPlusAdCreateBodyLandingPageUrlList",
+        "array": true,
+        "required": false
+      },
+      "page_list": {
+        "type": "SmartPlusAdCreateBodyPageList",
+        "array": true,
+        "required": false
+      },
+      "smart_plus_ad_id": {
+        "type": "String",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdUpdateBodyAdConfiguration": {
+      "auto_disclaimer_types": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "call_to_action_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "catalog_creative_toggle": {
+        "type": "Boolean",
+        "array": false,
+        "required": false
+      },
+      "dark_post_status": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "end_card_cta": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "fallback_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "phone_info": {
+        "type": "SmartPlusAdCreateBodyAdConfigurationPhoneInfo",
+        "array": false,
+        "required": false
+      },
+      "product_ids": {
+        "type": "String",
+        "array": true,
+        "required": false
+      },
+      "product_set_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "product_specific_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_info": {
+        "type": "SmartPlusAdUpdateBodyAdConfigurationTrackingInfo",
+        "array": false,
+        "required": false
+      },
+      "utm_params": {
+        "type": "SmartPlusAdUpdateBodyAdConfigurationUtmParams",
+        "array": true,
+        "required": false
+      }
+    },
+    "SmartPlusAdUpdateBodyAdConfigurationTrackingInfo": {
+      "click_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "impression_tracking_url": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "tracking_app_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdUpdateBodyAdConfigurationUtmParams": {
+      "key": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "value": {
+        "type": "String",
+        "array": false,
+        "required": false
+      }
+    },
+    "SmartPlusAdUpdateBodyCreativeList": {
+      "creative_info": {
+        "type": "SmartPlusAdUpdateBodyCreativeInfo",
+        "array": false,
+        "required": true
+      }
+    },
+    "SmartPlusAdUpdateBodyCreativeInfo": {
+      "ad_format": {
+        "type": "String",
+        "array": false,
+        "required": true
+      },
+      "aigc_disclosure_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_authorized_bc_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "identity_type": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "image_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfoImageInfo",
+        "array": true,
+        "required": false
+      },
+      "music_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfoMusicInfo",
+        "array": false,
+        "required": false
+      },
+      "tiktok_item_id": {
+        "type": "String",
+        "array": false,
+        "required": false
+      },
+      "video_info": {
+        "type": "SmartPlusAdCreateBodyCreativeInfoVideoInfo",
+        "array": false,
+        "required": false
+      }
+    }
+  }
+}

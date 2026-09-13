@@ -28,8 +28,8 @@ Also listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as *
 
 | | |
 |---|---|
-| **27 read tools** | Campaigns, ad groups, ads, creatives, audiences, pixels, events, Spark Ads, catalogs, delivery diagnostics |
-| **5 write tools** | Off by default. Campaign and ad group status, budgets, campaign creation. Each one **previews before it applies** |
+| **33 read tools** | Campaigns, ad groups, ads, creatives, audiences, pixels, events, Spark Ads, catalogs, delivery diagnostics |
+| **27 write tools** | Off by default. Campaign and ad group status, budgets, campaign creation. Each one **previews before it applies** |
 | **277 metrics** | Including derived ones computed client-side |
 | **16 dimensions** | With a compatibility matrix that catches invalid combinations before they hit the API |
 | **5 resources** | Live catalogues the model can read: metrics, dimensions, compatibility rules, 12 workflow recipes |
@@ -343,3 +343,48 @@ Please read [SECURITY.md](SECURITY.md) before reporting anything security-relate
 TikTok and TikTok for Business are trademarks of ByteDance Ltd. and its affiliates.
 **This project is not affiliated with, endorsed by, or sponsored by TikTok or ByteDance.**
 It is an independent client of a public API.
+
+## Version 1.1: platform updates and MCP contracts
+
+Every tool now declares read/write annotations, parameter descriptions and a structured output schema. Successful calls retain their original text and expose the same payload as `structuredContent.result`; provider fields depend on the selected report. Errors retain `isError: true`. The generated [server card](server-card.json) contains definitions only, with no account credentials.
+
+Writes remain disabled unless the platform-specific `ENABLE_WRITES` setting is enabled. Read the exact tool schema before calling: operations can require the owning account, currency, native configuration or a matching preview hash. Calls preview by default; applying a change requires `confirm: true`. A provider timeout can leave the outcome unknown: reconcile the account before retrying a creation or upload.
+
+Additional tools included in this release:
+
+| Tool | Purpose |
+| --- | --- |
+| `tiktok_get_targeting` | Read configured ad group targeting and audience references: custom/lookalike inclusions/exclusions, geo, language, age/gender, placements, interests and behaviors. |
+| `tiktok_get_audience_report` | Read TikTok AUDIENCE performance reports by age or gender at advertiser, campaign, ad group or ad level, including delivery from eligible Smart+ campaigns. |
+| `tiktok_list_ad_videos` | List the advertiser's whole video library (file/video/ad/search): file name, duration, dimensions, signature, and publicly served preview and cover URLs. |
+| `tiktok_list_ad_images` | List the advertiser's whole image library (file/image/ad/search): file name, dimensions, signature, carousel usability, and a publicly served image URL signed for roughly thirty days (image_url_expires_at gives the exact instant).. |
+| `tiktok_get_asset_urls` | Re-resolve fresh, publicly fetchable URLs for specific TikTok library assets (file/video/ad/info and file/image/ad/info). |
+| `tiktok_get_write_context` | Read the exact TikTok entity, parent settings and advertiser currency/timezone before editing or building a new configuration. |
+| `tiktok_create_campaign_advanced` | Create DISABLED classic TikTok campaign. |
+| `tiktok_update_campaign_configuration` | Update classic TikTok campaign. |
+| `tiktok_create_adgroup` | Create DISABLED classic TikTok adgroup. |
+| `tiktok_update_adgroup_configuration` | Update classic TikTok adgroup. |
+| `tiktok_create_ads` | Create DISABLED classic TikTok ads (video, image, carousel or authorized Spark content). |
+| `tiktok_update_ads` | Update classic TikTok ads (video, image, carousel or authorized Spark content). |
+| `tiktok_create_smart_plus_campaign` | Create DISABLED upgraded Smart+ TikTok campaign. |
+| `tiktok_update_smart_plus_campaign` | Update upgraded Smart+ TikTok campaign. |
+| `tiktok_create_smart_plus_adgroup` | Create DISABLED upgraded Smart+ TikTok adgroup. |
+| `tiktok_update_smart_plus_adgroup` | Update upgraded Smart+ TikTok adgroup. |
+| `tiktok_create_smart_plus_ad` | Create DISABLED upgraded Smart+ TikTok ads (video, image, carousel or authorized Spark content). |
+| `tiktok_update_smart_plus_ad` | Update upgraded Smart+ TikTok ads (video, image, carousel or authorized Spark content). |
+| `tiktok_update_ad_status` | Pause or reactivate exactly one classic ad. |
+| `tiktok_update_smart_plus_campaign_status` | Pause or reactivate exactly one Smart+ campaign. |
+| `tiktok_update_smart_plus_adgroup_status` | Pause or reactivate exactly one Smart+ adgroup. |
+| `tiktok_update_smart_plus_ad_status` | Pause or reactivate exactly one Smart+ ad. |
+| `tiktok_update_smart_plus_material_status` | Pause or reactivate selected creative materials inside one upgraded Smart+ ad. |
+| `tiktok_rename_campaign` | Rename one classic TikTok campaign. |
+| `tiktok_rename_adgroup` | Rename one classic TikTok adgroup. |
+| `tiktok_rename_ad` | Rename one classic TikTok ad. |
+| `tiktok_upload_ad_image` | Import a image from a public HTTPS media URL or base64 file (up to 5 MiB). |
+| `tiktok_upload_ad_video` | Import a video from a public HTTPS media URL or base64 file (up to 5 MiB). |
+
+The hosted GetMCPAds service additionally provides OAuth account selection and interactive review workspaces. Local servers use your own platform credentials and return native report data and media references.
+
+### Desktop bundle
+
+Run `npm run bundle -- /path/to/output` to build a `.mcpb` desktop bundle from the current catalogue. The bundle contains production dependencies, documented local configuration, and complete tool definitions. Provider credentials are entered locally during installation; write tools remain disabled unless explicitly enabled.

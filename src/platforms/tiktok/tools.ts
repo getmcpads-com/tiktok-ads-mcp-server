@@ -3,6 +3,7 @@
  * Copyright 2026 GetMCPAds. https://www.getmcpads.com
  * SPDX-License-Identifier: Apache-2.0
  */
+import {adgroupReadShape, audienceReportShape, readAdgroups, readAudienceReport, planAudienceReport, AUDIENCE_BREAKDOWNS} from "./audience-read.js";
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { TikTokApiException, TikTokClient } from "./client.js";
@@ -430,6 +431,66 @@ function jaccard(left: string[], right: string[]): number | undefined {
   return union > 0 ? intersection / union : undefined;
 }
 
+const libraryPageSchema = z.number().int().min(1).max(10_000).optional().default(1)
+  .describe("Page number (page_info.total_page in the response gives the bound)");
+const libraryPageSizeSchema = z.number().int().min(1).max(100).optional().default(20)
+  .describe("Items per page (TikTok caps file library pages at 100)");
+
+/** ISO de l'epoch `x-expires` que TikTok signe dans ses URLs CDN. */
+function signedUrlExpiresAt(url: unknown): string | undefined {
+  if (typeof url !== "string") return undefined;
+  try {
+    const raw = new URL(url).searchParams.get("x-expires");
+    const epoch = raw ? Number(raw) : Number.NaN;
+    if (!Number.isFinite(epoch) || epoch <= 0) return undefined;
+    return new Date(epoch * 1000).toISOString();
+  } catch {
+    return undefined;
+  }
+}
+
+function normalizeLibraryVideo(row: ApiObject): ApiObject {
+  return compactObject({
+    video_id: fieldAsString(row, "video_id"),
+    material_id: fieldAsString(row, "material_id"),
+    file_name: fieldAsString(row, "file_name"),
+    duration_seconds: fieldAsFloat(row, "duration"),
+    width: fieldAsNumber(row, "width"),
+    height: fieldAsNumber(row, "height"),
+    size_bytes: fieldAsNumber(row, "size"),
+    bit_rate: fieldAsNumber(row, "bit_rate"),
+    format: fieldAsString(row, "format"),
+    signature: fieldAsString(row, "signature"),
+    displayable: row["displayable"],
+    allow_download: row["allow_download"],
+    preview_url: fieldAsString(row, "preview_url"),
+    preview_url_expire_time: fieldAsString(row, "preview_url_expire_time"),
+    cover_url: fieldAsString(row, "video_cover_url"),
+    cover_url_expires_at: signedUrlExpiresAt(row["video_cover_url"]),
+    create_time: fieldAsString(row, "create_time"),
+    modify_time: fieldAsString(row, "modify_time"),
+  });
+}
+
+function normalizeLibraryImage(row: ApiObject): ApiObject {
+  return compactObject({
+    image_id: fieldAsString(row, "image_id"),
+    material_id: fieldAsString(row, "material_id"),
+    file_name: fieldAsString(row, "file_name"),
+    width: fieldAsNumber(row, "width"),
+    height: fieldAsNumber(row, "height"),
+    size_bytes: fieldAsNumber(row, "size"),
+    format: fieldAsString(row, "format"),
+    signature: fieldAsString(row, "signature"),
+    displayable: row["displayable"],
+    is_carousel_usable: row["is_carousel_usable"],
+    image_url: fieldAsString(row, "image_url"),
+    image_url_expires_at: signedUrlExpiresAt(row["image_url"]),
+    create_time: fieldAsString(row, "create_time"),
+    modify_time: fieldAsString(row, "modify_time"),
+  });
+}
+
 export function registerTikTokTools(server: McpServer, config: TikTokConfig): void {
   const client = new TikTokClient(config.accessToken, config.defaultAdvertiserId, "v1.3", config.appId, config.appSecret);
 
@@ -491,12 +552,20 @@ export function registerTikTokTools(server: McpServer, config: TikTokConfig): vo
           warnings.push(String(advertiserInfoCheck["warning"]));
         }
 
-        const credentials = {
+        // L'identifiant et le secret de l'application ne servent qu'à échanger
+        // un code d'autorisation contre un jeton, ce qui se passe ailleurs et
+        // une seule fois. Un serveur qui reçoit un jeton déjà obtenu n'en a
+        // aucun besoin, et les annoncer comme « non configurés » a envoyé un
+        // agent chercher une panne de credentials pendant que la vraie cause
+        // était ailleurs. Ils ne sont donc signalés que lorsqu'ils manquent
+        // alors qu'ils serviraient.
+        const credentials: Record<string, unknown> = {
           accessTokenConfigured: Boolean(config.accessToken),
-          appIdConfigured: Boolean(config.appId),
-          appSecretConfigured: Boolean(config.appSecret),
           defaultAdvertiserIdConfigured: Boolean(config.defaultAdvertiserId),
           defaultAdvertiserId: config.defaultAdvertiserId,
+          appCredentials: config.appId && config.appSecret
+            ? "configured"
+            : "not needed here: the access token is supplied directly, and app id and secret are only used to obtain one",
         };
 
         return ok({
@@ -569,24 +638,23 @@ export function registerTikTokTools(server: McpServer, config: TikTokConfig): vo
   // ── 4. tiktok_get_adgroups ─────────────────────────────────────────
   server.tool(
     "tiktok_get_adgroups",
-    "List ad groups for a TikTok advertiser. Returns targeting, budget, optimization goal, and schedule info.",
-    {
-      advertiserId: advertiserIdSchema,
-      campaignId: z.string().optional().describe("Filter by campaign ID"),
-      limit: limitSchema,
-    },
-    async ({ advertiserId, campaignId, limit }) => {
-      try {
-        const params: Record<string, string> = {
-          advertiser_id: advertiserId,
-          page_size: String(limit),
-          fields: JSON.stringify(["adgroup_id", "adgroup_name", "campaign_id", "operation_status", "budget", "budget_mode", "optimization_goal", "bid_type", "bid_price", "placement_type", "schedule_start_time", "schedule_end_time"]),
-        };
-        if (campaignId) params.filtering = JSON.stringify({ campaign_ids: [campaignId] });
-        const result = await client.fetchUrl(`/adgroup/get/?${new URLSearchParams(params).toString()}`);
-        return ok(result);
-      } catch (e) { return formatMcpToolError(e); }
-    },
+    "Read full native ad group configuration including targeting, custom/lookalike audience references and exclusions, geo, language, age/gender, placements, interests/behaviors, budget and schedule. Set smartPlus:true for upgraded Smart+ targeting_spec. Missing fields are unknown, not unrestricted targeting. Paginated.",
+    adgroupReadShape,
+    async (args) => {try {return ok(await readAdgroups(client,args));} catch(e){return formatMcpToolError(e);}},
+  );
+
+  server.tool(
+    "tiktok_get_targeting",
+    "Read configured ad group targeting and audience references: custom/lookalike inclusions/exclusions, geo, language, age/gender, placements, interests and behaviors. Supports classic and upgraded Smart+ (smartPlus:true), preserving targeting_spec and automatic targeting settings. Does not infer delivered audiences or hidden Smart+ signals. Use tiktok_get_audiences for audience names/types and tiktok_get_audience_report for delivered demographics.",
+    adgroupReadShape,
+    async (args) => {try {return ok(await readAdgroups(client,args));} catch(e){return formatMcpToolError(e);}},
+  );
+
+  server.tool(
+    "tiktok_get_audience_report",
+    "Read TikTok AUDIENCE performance reports by age or gender at advertiser, campaign, ad group or ad level, including delivery from eligible Smart+ campaigns. Multiple demographics return separate reports, not a joint distribution. Explicit pagination and native provider errors; no inference of configured targeting or Custom Audience membership.",
+    audienceReportShape,
+    async (args) => {try {return ok(await readAudienceReport(client,args));} catch(e){return formatMcpToolError(e);}},
   );
 
   // ── 5. tiktok_get_ads ──────────────────────────────────────────────
@@ -615,23 +683,40 @@ export function registerTikTokTools(server: McpServer, config: TikTokConfig): vo
   // ── 6. tiktok_get_insights ─────────────────────────────────────────
   server.tool(
     "tiktok_get_insights",
-    `Query TikTok Ads performance insights. Supports 400+ metrics with intelligent query planning.
+    `Query TikTok Ads performance insights using the current native/calculated metric catalog and query planning.
 Use tiktok://metrics resource to see available metrics. Use tiktok://dimensions for dimensions.
-The query planner automatically splits requests when dimension combinations are incompatible (only 1 ID dimension + 1 time dimension allowed per request).`,
+Age/gender dimensions route automatically to AUDIENCE reports via tiktok_get_audience_report, including campaign/ad group levels. Other dimensions use the BASIC planner. Multiple audience breakdowns remain separate reports, never joined.`,
     {
       advertiserId: advertiserIdSchema,
+      reportType: z.enum(["BASIC", "AUDIENCE"]).optional().describe("Defaults to AUDIENCE for age/gender, BASIC otherwise. Explicit BASIC with demographics is rejected."),
       metrics: z.array(z.string()).min(1).describe("Metric keys from tiktok://metrics (e.g., spend, impressions, clicks)"),
       dimensions: z.array(z.string()).optional().describe("Dimension keys from tiktok://dimensions (e.g., stat_time_day, campaign_id)"),
       dataLevel: z.enum(["AUCTION_ADVERTISER", "AUCTION_CAMPAIGN", "AUCTION_ADGROUP", "AUCTION_AD"]).optional().default("AUCTION_CAMPAIGN"),
       startDate: z.string().describe("Start date YYYY-MM-DD"),
       endDate: z.string().describe("End date YYYY-MM-DD"),
       queryLifetime: z.boolean().optional().default(false).describe("Query lifetime metrics (cannot use time dimensions)"),
+      campaignIds: z.array(z.string().regex(/^\d+$/)).min(1).max(100).optional().describe("Restrict audience reports to these campaigns."),
+      adgroupIds: z.array(z.string().regex(/^\d+$/)).min(1).max(100).optional().describe("Restrict audience reports to these ad groups."),
+      page: z.number().int().min(1).max(10000).optional().describe("AUDIENCE report page; follow nextPage."),
+      adIds: z.array(z.string().regex(/^\d+$/)).min(1).max(100).optional().describe("Restrict AUCTION_AD reports to these ad IDs, including daily trends."),
+      orderField: z.enum(["spend", "impressions", "clicks"]).optional().describe("Order the native report before limiting rows. Include this metric in metrics."),
+      orderType: z.enum(["ASC", "DESC"]).optional().describe("Native sort direction; defaults to DESC when orderField is selected."),
       limit: z.number().int().min(1).max(1000).optional().default(500),
     },
-    async ({ advertiserId, metrics, dimensions, dataLevel, startDate, endDate, queryLifetime, limit }) => {
+    async ({ advertiserId, metrics, dimensions, dataLevel, startDate, endDate, queryLifetime, adIds, campaignIds, adgroupIds, page, reportType, orderField, orderType, limit }) => {
       try {
+        const demographics=dimensions?.some(d=>(AUDIENCE_BREAKDOWNS as readonly string[]).includes(d));
+        if(reportType==='AUDIENCE'||demographics){
+          if(reportType==='BASIC')throw new Error('age/gender require AUDIENCE, not BASIC. Omit reportType or set AUDIENCE.');
+          if(queryLifetime)throw new Error('AUDIENCE requires an explicit date range; lifetime is not supported by this tool.');
+          return ok(await readAudienceReport(client,{advertiserId,metrics,dimensions:dimensions??['age'],dataLevel,startDate,endDate,adIds,campaignIds,adgroupIds,page,orderField,orderType,limit}));
+        }
+        if(campaignIds||adgroupIds||page!==undefined)throw new Error('campaignIds, adgroupIds and page are supported here for AUDIENCE only. Use tiktok_get_report_raw for paged/filtered BASIC reports.');
         const startTime = Date.now();
         const resolvedDataLevel = dataLevel as AuctionDataLevel;
+        if (adIds && resolvedDataLevel !== "AUCTION_AD") throw new Error("adIds requires dataLevel AUCTION_AD.");
+        if (orderField && !metrics.includes(orderField)) throw new Error("Include orderField in the requested metrics.");
+        if (orderType && !orderField) throw new Error("orderType requires orderField.");
         const effectiveDimensions = dimensions && dimensions.length > 0
           ? dimensions
           : [defaultDimensionForDataLevel(resolvedDataLevel)];
@@ -646,7 +731,19 @@ The query planner automatically splits requests when dimension combinations are 
           startDate,
           endDate,
           queryLifetime,
-          pageSize: limit,
+          orderField,
+          orderType: orderField ? (orderType ?? "DESC") : undefined,
+          filtering: adIds ? [{field_name:"ad_ids",filter_type:"IN",filter_value:JSON.stringify(adIds)}] : undefined,
+          // `limit` plafonne les lignes rendues, pas la taille d'une page.
+          //
+          // Il servait de `page_size`, ce qui inversait son effet : demander
+          // trois lignes découpait 588 résultats en 196 pages, le client les
+          // parcourait toutes, et le Worker mourait sur la limite de
+          // sous-requêtes de Cloudflare. Autrement dit, plus la limite était
+          // petite, plus l'appel avait de chances d'échouer. Toute demande de
+          // métriques au niveau annonce tombait là-dessus.
+          pageSize: 1000,
+          maxRows: limit,
         });
 
         if (plan.errors.length > 0) {
@@ -671,15 +768,28 @@ The query planner automatically splits requests when dimension combinations are 
           data = await client.enrichWithEntityNames(data, advertiserId);
         }
 
+        // `limit` tronque enfin ce qui est rendu.
+        //
+        // Il ne servait que de taille de page, donc un appel au niveau annonce
+        // rendait les 588 lignes du compte, soit 146 kilo-octets de JSON, quelle
+        // que soit la limite demandée. Un outil qui rend cela par défaut est
+        // hostile à tout agent : il remplit une conversation d'un coup, et le
+        // modèle n'a même pas demandé.
+        const truncated = data.length > limit;
+        const shown = truncated ? data.slice(0, limit) : data;
+
         return ok({
-          data,
-          rowCount: data.length,
+          data: shown,
+          rowCount: shown.length,
+          totalRowCount: data.length,
+          truncated,
           debug: {
             requestCount: plan.requests.length,
             executionTimeMs: Date.now() - startTime,
             warnings: [
               ...plan.warnings,
               ...(!dimensions || dimensions.length === 0 ? [`No dimension provided; defaulted to ${effectiveDimensions[0]} because TikTok reports require at least one dimension.`] : []),
+              ...(truncated ? [`${data.length} rows matched; the first ${limit} are returned, ordered as TikTok returned them. Raise limit, or narrow the date range, to see more.`] : []),
             ],
             calculatedMetrics: plan.calculatedMetrics,
           },
@@ -704,7 +814,11 @@ The query planner automatically splits requests when dimension combinations are 
           page_size: String(limit),
           fields: JSON.stringify(["ad_id", "ad_name", "creative_type", "ad_text", "ad_texts", "video_id", "image_ids", "landing_page_url", "landing_page_urls", "call_to_action", "display_name", "avatar_icon_web_uri"]),
         };
-        if (adIds && adIds.length > 0) params.filtering = JSON.stringify({ ad_ids: adIds });
+        // primary_status STATUS_ALL systématique : sans lui, /ad/get/ masque les
+        // ads archivées/supprimées (mesuré en live : 572 vs 848 sur un compte).
+        params.filtering = JSON.stringify(
+          adIds && adIds.length > 0 ? { ad_ids: adIds, primary_status: "STATUS_ALL" } : { primary_status: "STATUS_ALL" },
+        );
         const result = await client.fetchUrl(`/ad/get/?${new URLSearchParams(params).toString()}`);
         return ok(result);
       } catch (e) { return formatMcpToolError(e); }
@@ -718,11 +832,13 @@ The query planner automatically splits requests when dimension combinations are 
     {
       advertiserId: advertiserIdSchema,
       limit: limitSchema,
+      page: z.number().int().min(1).max(10000).optional().default(1).describe("Follow page_info.total_page to read the full audience library."),
     },
-    async ({ advertiserId, limit }) => {
+    async ({ advertiserId, limit, page }) => {
       try {
         const params: Record<string, string> = {
           advertiser_id: advertiserId,
+          page: String(page),
           page_size: String(limit),
         };
         const result = await client.fetchUrl(`/dmp/custom_audience/list/?${new URLSearchParams(params).toString()}`);
@@ -761,14 +877,26 @@ The query planner automatically splits requests when dimension combinations are 
       metrics: z.array(z.string()).min(1).describe("Metric keys to validate"),
       dimensions: z.array(z.string()).optional().describe("Dimension keys to validate"),
       dataLevel: z.enum(["AUCTION_ADVERTISER", "AUCTION_CAMPAIGN", "AUCTION_ADGROUP", "AUCTION_AD"]).optional().default("AUCTION_CAMPAIGN"),
+      reportType: z.enum(["BASIC","AUDIENCE"]).optional(),
       queryLifetime: z.boolean().optional().default(false),
     },
-    async ({ metrics, dimensions, dataLevel, queryLifetime }) => {
+    async ({ metrics, dimensions, dataLevel, queryLifetime, reportType }) => {
       try {
         const resolvedDataLevel = dataLevel as AuctionDataLevel;
         const effectiveDimensions = dimensions && dimensions.length > 0
           ? dimensions
           : [defaultDimensionForDataLevel(resolvedDataLevel)];
+        if(reportType==='AUDIENCE'||effectiveDimensions.some(d=>(AUDIENCE_BREAKDOWNS as readonly string[]).includes(d))){
+          const errors:string[]=[];
+          try{
+            if(reportType==='BASIC')throw new Error('age/gender require AUDIENCE, not BASIC.');
+            if(queryLifetime)throw new Error('AUDIENCE requires explicit dates, not lifetime.');
+            // This tool validates selections only, without an advertiser or dates.
+            // Use inert local placeholders to share the execution contract; no API call.
+            planAudienceReport({advertiserId:'0',metrics,dimensions:reportType==='AUDIENCE'&&!dimensions?.length?['age']:effectiveDimensions,dataLevel,startDate:'2000-01-01',endDate:'2000-01-01'});
+          }catch(e){errors.push((e as Error).message);}
+          return ok({valid:errors.length===0,errors,reportType:'AUDIENCE',providerValidated:false,warnings:['Local selection validation only. TikTok validates metric, objective and advertiser eligibility on execution.'],nextActions:['Use tiktok_get_audience_report or tiktok_get_insights with age/gender.']});
+        }
         const result = validateQuery(
           metrics,
           effectiveDimensions,
@@ -1214,6 +1342,9 @@ The query planner automatically splits requests when dimension combinations are 
         const adFiltering = compactObject({
           ad_ids: adIds,
           adgroup_ids: adgroupId ? [adgroupId] : undefined,
+          // Sans STATUS_ALL, /ad/get/ masque les ads archivées/supprimées et
+          // leurs vidéos disparaissent de la découverte (572 vs 848 en live).
+          primary_status: "STATUS_ALL",
         });
         const adAttempt = await fetchOptional(client, "ad creative video fields", "/ad/get/", {
           advertiser_id: advertiserId,
@@ -2067,53 +2198,15 @@ The query planner automatically splits requests when dimension combinations are 
       advertiserId: advertiserIdSchema,
       campaignId: z.string().optional().describe("Optional campaign ID filter."),
       adgroupIds: z.array(z.string()).optional().describe("Optional ad group IDs to compare."),
+      smartPlus: adgroupReadShape.smartPlus,
       includeSavedAudiences: z.boolean().optional().default(true),
       overlapThreshold: z.number().min(0).max(1).optional().default(0.65),
       limit: limitSchema,
     },
-    async ({ advertiserId, campaignId, adgroupIds, includeSavedAudiences, overlapThreshold, limit }) => {
+    async ({ advertiserId, campaignId, adgroupIds, smartPlus, includeSavedAudiences, overlapThreshold, limit }) => {
       try {
-        const filtering = compactObject({
-          campaign_ids: campaignId ? [campaignId] : undefined,
-          adgroup_ids: adgroupIds,
-        });
-        const adgroups = await fetchFirstAvailable(client, [
-          {
-            label: "ad group targeting fields",
-            path: "/adgroup/get/",
-            params: {
-              advertiser_id: advertiserId,
-              page_size: limit,
-              fields: [
-                "adgroup_id",
-                "adgroup_name",
-                "campaign_id",
-                "placement_type",
-                "audience_ids",
-                "excluded_audience_ids",
-                "location_ids",
-                "age_groups",
-                "gender",
-                "languages",
-                "interest_category_ids",
-                "operating_systems",
-                "device_price_ranges",
-                "network_types",
-              ],
-              ...(Object.keys(filtering).length > 0 && { filtering }),
-            },
-          },
-          {
-            label: "ad group conservative fields",
-            path: "/adgroup/get/",
-            params: {
-              advertiser_id: advertiserId,
-              page_size: limit,
-              fields: ["adgroup_id", "adgroup_name", "campaign_id", "placement_type"],
-              ...(Object.keys(filtering).length > 0 && { filtering }),
-            },
-          },
-        ]);
+        const adgroupResult=await readAdgroups(client,{advertiserId,campaignId,adgroupIds,smartPlus,limit});
+        const adgroups={selected:{ok:true,data:adgroupResult},attempts:[{label:"full native targeting",endpoint:adgroupResult.endpoint,ok:true}]};
 
         const customAudiences = await fetchOptional(client, "custom audience list", "/dmp/custom_audience/list/", {
           advertiser_id: advertiserId,
@@ -2219,7 +2312,7 @@ The query planner automatically splits requests when dimension combinations are 
           }
         }
 
-        const attempts = [
+        const attempts: EndpointAttempt[] = [
           ...adgroups.attempts,
           customAudiences,
           ...(savedAudiences ? [savedAudiences] : []),
@@ -2230,6 +2323,9 @@ The query planner automatically splits requests when dimension combinations are 
           filters: compactObject({ campaignId, adgroupIds }),
           comparedAdgroupCount: normalized.length,
           audienceReuse,
+          targetingCoverage:adgroupResult.targetingCoverage,
+          pagination:adgroupResult.pagination,
+          limitations:[...adgroupResult.limitations,"Overlap scores compare configured field values only; they are not measured audience membership overlap or evidence of Smart+ delivery overlap."],
           pairwiseOverlap: pairwiseOverlap
             .sort((a, b) => (fieldAsFloat(b, "averageTargetingOverlap") ?? 0) - (fieldAsFloat(a, "averageTargetingOverlap") ?? 0))
             .slice(0, 50),
@@ -2423,6 +2519,126 @@ The query planner automatically splits requests when dimension combinations are 
               : "Only stable Organic/Spark enrichment candidates were attempted. Pass includeExperimentalEndpoints=true to probe undocumented/unstable 404-prone endpoint candidates.",
           attempts: attempts.map((attempt) => attemptSummary(attempt)),
           warnings,
+        });
+      } catch (e) { return formatMcpToolError(e); }
+    },
+  );
+
+  // ── 24. tiktok_list_ad_videos ─────────────────────────────────────
+  server.tool(
+    "tiktok_list_ad_videos",
+    "List the advertiser's whole video library (file/video/ad/search): file name, duration, dimensions, signature, and publicly served preview and cover URLs. Every TikTok URL is signed and expires after roughly six hours: re-resolve with tiktok_get_asset_urls before use.",
+    {
+      advertiserId: advertiserIdSchema,
+      page: libraryPageSchema,
+      pageSize: libraryPageSizeSchema,
+    },
+    async ({ advertiserId, page, pageSize }) => {
+      try {
+        const attempt = await fetchOptional(client, "video library", "/file/video/ad/search/", {
+          advertiser_id: advertiserId,
+          page: typeof page === "number" ? page : 1,
+          page_size: typeof pageSize === "number" ? pageSize : 20,
+        });
+        const videos = attempt.ok ? getDataList(attempt.data).map(normalizeLibraryVideo) : [];
+        return ok({
+          videos,
+          count: videos.length,
+          pageInfo: attempt.ok ? getPageInfo(attempt.data) : undefined,
+          warnings: attempt.ok ? [] : [attempt.warning ?? "file/video/ad/search unavailable"],
+          limitations: [
+            "preview_url is the full raw video file and cover_url its thumbnail; both are publicly fetchable without authentication but their signatures expire after about six hours, so never store them as durable links.",
+            "The library lists uploaded assets regardless of ad status; catalog ads reference no library asset at all.",
+          ],
+          nextActions: ["Call tiktok_get_asset_urls with videoIds right before displaying or downloading."],
+        });
+      } catch (e) { return formatMcpToolError(e); }
+    },
+  );
+
+  // ── 25. tiktok_list_ad_images ─────────────────────────────────────
+  server.tool(
+    "tiktok_list_ad_images",
+    "List the advertiser's whole image library (file/image/ad/search): file name, dimensions, signature, carousel usability, and a publicly served image URL signed for roughly thirty days (image_url_expires_at gives the exact instant).",
+    {
+      advertiserId: advertiserIdSchema,
+      page: libraryPageSchema,
+      pageSize: libraryPageSizeSchema,
+    },
+    async ({ advertiserId, page, pageSize }) => {
+      try {
+        const attempt = await fetchOptional(client, "image library", "/file/image/ad/search/", {
+          advertiser_id: advertiserId,
+          page: typeof page === "number" ? page : 1,
+          page_size: typeof pageSize === "number" ? pageSize : 20,
+        });
+        const images = attempt.ok ? getDataList(attempt.data).map(normalizeLibraryImage) : [];
+        return ok({
+          images,
+          count: images.length,
+          pageInfo: attempt.ok ? getPageInfo(attempt.data) : undefined,
+          warnings: attempt.ok ? [] : [attempt.warning ?? "file/image/ad/search unavailable"],
+          limitations: [
+            "image_url is publicly fetchable without authentication but signed for about thirty days (see image_url_expires_at): re-resolve with tiktok_get_asset_urls rather than storing the URL durably.",
+            "The library lists uploaded assets regardless of ad status; catalog ads reference no library asset at all.",
+          ],
+          nextActions: ["Call tiktok_get_asset_urls with imageIds to refresh URLs at display time."],
+        });
+      } catch (e) { return formatMcpToolError(e); }
+    },
+  );
+
+  // ── 26. tiktok_get_asset_urls ─────────────────────────────────────
+  server.tool(
+    "tiktok_get_asset_urls",
+    "Re-resolve fresh, publicly fetchable URLs for specific TikTok library assets (file/video/ad/info and file/image/ad/info). Call at display or download time: every TikTok media URL is signed and expires.",
+    {
+      advertiserId: advertiserIdSchema,
+      videoIds: z.array(z.string()).max(60).optional().describe("Video IDs to refresh (at most 60 per call, TikTok's documented cap)"),
+      imageIds: z.array(z.string()).max(100).optional().describe("Image IDs to refresh"),
+    },
+    async ({ advertiserId, videoIds, imageIds }) => {
+      try {
+        const warnings: string[] = [];
+        const vids = Array.isArray(videoIds) ? [...new Set(videoIds.map(String).filter(Boolean))].slice(0, 60) : [];
+        const imgs = Array.isArray(imageIds) ? [...new Set(imageIds.map(String).filter(Boolean))].slice(0, 100) : [];
+        if (vids.length === 0 && imgs.length === 0) {
+          return ok({
+            videos: [],
+            images: [],
+            count: 0,
+            warnings: ["No videoIds or imageIds were provided. Pass IDs from tiktok_list_ad_videos or tiktok_list_ad_images."],
+          });
+        }
+
+        let videos: ApiObject[] = [];
+        if (vids.length > 0) {
+          const attempt = await fetchOptional(client, "video url refresh", "/file/video/ad/info/", {
+            advertiser_id: advertiserId,
+            video_ids: vids,
+          });
+          if (!attempt.ok && attempt.warning) warnings.push(attempt.warning);
+          videos = attempt.ok ? getDataList(attempt.data).map(normalizeLibraryVideo) : [];
+        }
+
+        let images: ApiObject[] = [];
+        if (imgs.length > 0) {
+          const attempt = await fetchOptional(client, "image url refresh", "/file/image/ad/info/", {
+            advertiser_id: advertiserId,
+            image_ids: imgs,
+          });
+          if (!attempt.ok && attempt.warning) warnings.push(attempt.warning);
+          images = attempt.ok ? getDataList(attempt.data).map(normalizeLibraryImage) : [];
+        }
+
+        return ok({
+          videos,
+          images,
+          count: videos.length + images.length,
+          warnings,
+          limitations: [
+            "Returned URLs are freshly signed and expire again (video about six hours, image about thirty days): re-call this tool whenever a link goes stale.",
+          ],
         });
       } catch (e) { return formatMcpToolError(e); }
     },

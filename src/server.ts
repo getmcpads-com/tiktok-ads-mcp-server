@@ -1,3 +1,4 @@
+import { installToolQuality } from "./tool-quality.js";
 /**
  * tiktok-ads-mcp-server: an open-source MCP server for the TikTok Business API.
  * Copyright 2026 GetMCPAds. https://www.getmcpads.com
@@ -8,14 +9,15 @@ import type { TikTokConfig } from "./config.js";
 import { registerTikTok } from "./platforms/tiktok/index.js";
 import { logger } from "./core/logger.js";
 
-export const PACKAGE_VERSION = "1.0.2";
+export const PACKAGE_VERSION = "1.1.0";
 
 export function createServer(config: TikTokConfig): McpServer {
   const server = new McpServer(
-    { name: "tiktok-ads-mcp", version: PACKAGE_VERSION },
+    { name: "tiktok-ads-mcp", version: PACKAGE_VERSION, title: "TikTok Ads", websiteUrl: "https://www.getmcpads.com/tools/tiktok-ads", icons: [{ src: "https://mcp.getmcpads.com/icon.svg", mimeType: "image/svg+xml" }] },
     { capabilities: { tools: { listChanged: true }, resources: { subscribe: false, listChanged: true } } },
   );
 
+  installToolQuality(server);
   registerTikTok(server, config);
 
   logger.system(

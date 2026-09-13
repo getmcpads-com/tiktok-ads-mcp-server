@@ -222,7 +222,7 @@ export function registerTikTokBroadReadTools(
 
   server.tool(
     "tiktok_get_report_raw",
-    "Run a native TikTok synchronous report with caller-selected dimensions and metrics. Use when a current API field is not yet in tiktok://metrics; unlike tiktok_get_insights, this tool does not calculate aliases or auto-split incompatible selections.",
+    "Run a native TikTok BASIC or AUDIENCE synchronous report with caller-selected dimensions and metrics. AUDIENCE supports demographics such as age/gender at campaign/adgroup levels; tiktok_get_audience_report provides a guided path. Use when a current API field is not yet in tiktok://metrics; unlike tiktok_get_insights, this tool does not calculate aliases or auto-split incompatible selections.",
     {
       advertiserId: advertiserIdSchema,
       serviceType: z.enum(["AUCTION", "RESERVATION"]).optional().default("AUCTION"),

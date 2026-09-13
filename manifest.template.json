@@ -1,0 +1,97 @@
+{
+  "manifest_version": "0.3",
+  "name": "tiktok-ads-mcp-server",
+  "display_name": "TikTok Ads by Get MCP Ads",
+  "version": "1.1.0",
+  "description": "TikTok Ads MCP server: 33 read tools, 27 opt-in preview-first writes.",
+  "author": {
+    "name": "GetMCPAds",
+    "url": "https://www.getmcpads.com"
+  },
+  "homepage": "https://www.getmcpads.com/tools/tiktok-ads",
+  "documentation": "https://github.com/getmcpads-com/tiktok-ads-mcp-server#readme",
+  "support": "https://github.com/getmcpads-com/tiktok-ads-mcp-server/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getmcpads-com/tiktok-ads-mcp-server"
+  },
+  "icon": "icon.png",
+  "license": "Apache-2.0",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/cli.js"
+      ],
+      "env": {
+        "TIKTOK_ACCESS_TOKEN": "${user_config.tiktok_access_token}",
+        "TIKTOK_APP_ID": "${user_config.tiktok_app_id}",
+        "TIKTOK_APP_SECRET": "${user_config.tiktok_app_secret}",
+        "TIKTOK_ADVERTISER_ID": "${user_config.tiktok_advertiser_id}",
+        "TIKTOK_ENABLE_WRITES": "${user_config.tiktok_enable_writes}",
+        "TIKTOK_ENVIRONMENT": "${user_config.tiktok_environment}"
+      }
+    }
+  },
+  "user_config": {
+    "tiktok_access_token": {
+      "type": "string",
+      "title": "Tiktok Access Token",
+      "description": "TikTok Business API access token.",
+      "required": true,
+      "sensitive": true
+    },
+    "tiktok_app_id": {
+      "type": "string",
+      "title": "Tiktok App Id",
+      "description": "App ID the token belongs to.",
+      "required": true,
+      "sensitive": false
+    },
+    "tiktok_app_secret": {
+      "type": "string",
+      "title": "Tiktok App Secret",
+      "description": "App secret, for endpoints needing app authentication.",
+      "required": false,
+      "sensitive": true,
+      "default": ""
+    },
+    "tiktok_advertiser_id": {
+      "type": "string",
+      "title": "Tiktok Advertiser Id",
+      "description": "Default advertiser ID.",
+      "required": false,
+      "sensitive": false,
+      "default": ""
+    },
+    "tiktok_enable_writes": {
+      "type": "string",
+      "title": "Tiktok Enable Writes",
+      "description": "Set to 1 to expose 27 write tools. Default calls preview; confirm:true applies changes.",
+      "required": false,
+      "sensitive": false,
+      "default": "0"
+    },
+    "tiktok_environment": {
+      "type": "string",
+      "title": "Tiktok Environment",
+      "description": "API environment: production (default) or sandbox. Use credentials issued for that environment.",
+      "required": false,
+      "sensitive": false,
+      "default": "production"
+    }
+  },
+  "tools_generated": true,
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=18"
+    }
+  }
+}

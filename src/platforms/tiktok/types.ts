@@ -188,6 +188,15 @@ export interface TikTokQueryRequest {
   queryLifetime?: boolean;
   page?: number;
   pageSize?: number;
+  /**
+   * Le nombre maximal de lignes à rendre, toutes pages confondues.
+   *
+   * Distinct de `pageSize`, et c'est le point : une petite taille de page
+   * multiplie les requêtes au lieu de les réduire, et Cloudflare coupe une
+   * invocation qui en fait trop. Le plafond arrête la pagination, il ne la
+   * rétrécit pas.
+   */
+  maxRows?: number;
   orderField?: string;
   orderType?: "ASC" | "DESC";
 }
@@ -208,6 +217,8 @@ export interface TikTokApiRequest {
   page_size?: number;
   order_field?: string;
   order_type?: "ASC" | "DESC";
+  /** Plafond de lignes, toutes pages confondues. Voir fetchAllPages. */
+  max_rows?: number;
 }
 
 // --- API Response Types ---

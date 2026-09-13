@@ -7,6 +7,7 @@ import { z } from "zod";
 import { logger } from "./core/logger.js";
 
 const configSchema = z.object({
+  environment: z.enum(["production", "sandbox"]).optional(),
   accessToken: z.string().min(1, "TIKTOK_ACCESS_TOKEN is required"),
   appId: z.string().min(1, "TIKTOK_APP_ID is required"),
   appSecret: z.string().optional(),
@@ -21,6 +22,7 @@ export type TikTokConfig = z.infer<typeof configSchema>;
 
 export function loadConfig(): TikTokConfig {
   const raw = {
+    environment: process.env["TIKTOK_ENVIRONMENT"] || "production",
     accessToken: process.env["TIKTOK_ACCESS_TOKEN"] ?? "",
     appId: process.env["TIKTOK_APP_ID"] ?? "",
     appSecret: process.env["TIKTOK_APP_SECRET"] || undefined,

@@ -198,7 +198,8 @@ function createApiRequest(
     filtering: request.filtering,
     query_lifetime: request.queryLifetime,
     page: request.page || 1,
-    page_size: request.pageSize || 100,
+    page_size: request.pageSize || 1000,
+    max_rows: request.maxRows,
     order_field: request.orderField,
     order_type: request.orderType,
   };

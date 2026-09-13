@@ -8,6 +8,8 @@ import { TIKTOK_METRIC_CATALOG } from "./metric-catalog.js";
 import { TIKTOK_DIMENSION_CATALOG } from "./dimension-catalog.js";
 
 const TIKTOK_TOOL_MANIFEST = [
+  { name: "tiktok_get_targeting", tier: "P0", scope: "read-only", purpose: "Read complete configured targeting, audience references/exclusions and placements. Use smartPlus:true for upgraded Smart+ targeting_spec; missing fields are unknown." },
+  { name: "tiktok_get_audience_report", tier: "P0", scope: "read-only", purpose: "Read delivered age/gender AUDIENCE reports at advertiser/campaign/adgroup/ad level. Multiple demographics stay separate; follow pagination." },
   { name: "tiktok_health_check", tier: "P0", scope: "read-only", purpose: "Verify credentials presence, advertiser access, and advertiser info without exposing tokens." },
   { name: "tiktok_list_advertisers", tier: "existing", scope: "read-only", purpose: "List accessible advertiser accounts." },
   { name: "tiktok_get_advertiser_info", tier: "existing", scope: "read-only", purpose: "Fetch account metadata for advertiser IDs." },
@@ -31,13 +33,18 @@ const TIKTOK_TOOL_MANIFEST = [
   { name: "tiktok_get_creative_fatigue_recipes", tier: "P2", scope: "read-only", purpose: "Find likely ad creative fatigue and return refresh recipes without mutation." },
   { name: "tiktok_get_audience_overlap", tier: "P2", scope: "read-only", purpose: "Compare ad group targeting, custom audiences, and saved audiences for overlap." },
   { name: "tiktok_get_spark_organic_joins", tier: "P2", scope: "read-only", purpose: "Join Spark Ads fields with paid page/post reporting and optional organic metadata endpoints." },
+  { name: "tiktok_list_ad_videos", tier: "P1", scope: "read-only", purpose: "List the advertiser's video library with metadata and short-lived preview/cover URLs." },
+  { name: "tiktok_list_ad_images", tier: "P1", scope: "read-only", purpose: "List the advertiser's image library with metadata and signed image URLs." },
+  { name: "tiktok_get_asset_urls", tier: "P1", scope: "read-only", purpose: "Re-sign fresh public URLs for specific library videos and images at display time." },
   { name: "tiktok_get_entities_raw", tier: "broad-read", scope: "read-only", purpose: "List campaigns, ad groups, or ads with native fields and filters." },
   { name: "tiktok_get_report_raw", tier: "broad-read", scope: "read-only", purpose: "Query newly released native report dimensions and metrics before catalog updates." },
   { name: "tiktok_get_targeting_catalog", tier: "broad-read", scope: "read-only", purpose: "Read planning, targeting, device, contextual, and Search Ads dictionaries." },
   { name: "tiktok_get_read_endpoint", tier: "broad-read", scope: "read-only", purpose: "Call a validated documented v1.3 JSON GET endpoint while blocking OAuth, mutations, downloads, and lead-record paths." },
+  {name:"tiktok_get_write_context",tier:"P1",scope:"read-only",purpose:"Inspect the selected advertiser and entity configuration before composing a write."},
 ] as const;
 
 const TIKTOK_RECIPES = [
+  {name:"configured_and_delivered_audience",goal:"Audit configured targeting separately from delivered demographics, including Smart+.",steps:["Call tiktok_get_targeting with advertiserId and smartPlus:true for upgraded Smart+; follow pagination and preserve targeting_spec.","Resolve audience references using tiktok_get_audiences and tiktok_get_audience_details; resolve geo/interest IDs using tiktok_get_targeting_catalog.","Call tiktok_get_audience_report or tiktok_get_insights with dimensions age/gender at the required campaign/adgroup level and an explicit date range.","Never turn separate age and gender reports into a cross-tab, infer missing settings, or call targeting similarity measured audience overlap."]},
   {
     name: "health_check",
     goal: "Confirm the MCP token/app credentials can read TikTok Ads data.",
@@ -245,7 +252,8 @@ export function registerTikTokResources(server: McpServer, enableWrites = false)
       uri: "tiktok://compatibility",
       mimeType: "application/json",
       text: JSON.stringify({
-        description: "TikTok dimension grouping rules: only 1 ID dimension + 1 time dimension per request. The query planner splits automatically.",
+        description: "BASIC planner grouping rules below. AUDIENCE age/gender use a separate report path, not the BASIC restrictions.",
+        audienceReports: {tools:["tiktok_get_audience_report","tiktok_get_insights"],reportType:"AUDIENCE",dimensions:["age","gender"],levels:["AUCTION_ADVERTISER","AUCTION_CAMPAIGN","AUCTION_ADGROUP","AUCTION_AD"],note:"One matching entity ID plus one demographic per report. Age and gender are separate distributions; no lifetime or inferred cross-tab."},
         idDimensions: ["advertiser_id", "campaign_id", "adgroup_id", "ad_id"],
         timeDimensions: ["stat_time_day", "stat_time_hour"],
         lifetimeExcluded: ["stat_time_day", "stat_time_hour", "country_code"],

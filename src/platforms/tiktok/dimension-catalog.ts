@@ -379,6 +379,7 @@ export const TIKTOK_DIMENSION_CATALOG: TikTokDimensionDefinition[] = [
   ...ID_DIMENSIONS,
   ...TIME_DIMENSIONS,
   ...TARGETING_DIMENSIONS,
+  ...["age","gender"].map(key=>createDimension(key,key=== "age"?"Age":"Gender", "Delivered audience breakdown. Requires report_type AUDIENCE: use tiktok_get_audience_report or tiktok_get_insights (auto-routed). Not configured targeting or a joint age/gender distribution.","targeting",key,{supportsLifetime:false,levelRestrictions:["AUCTION_ADVERTISER","AUCTION_CAMPAIGN","AUCTION_ADGROUP","AUCTION_AD"]})),
   ...ASSET_DIMENSIONS,
   ...SEARCH_DIMENSIONS,
   ...CONVERSION_DIMENSIONS,
