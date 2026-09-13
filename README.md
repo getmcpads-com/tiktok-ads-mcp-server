@@ -16,10 +16,11 @@ npx -y @getmcpads/tiktok-ads-mcp-server
 
 Also listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as **`com.getmcpads/tiktok-ads`**, so clients that read the registry can install it by name.
 
-> **Prefer not to run it yourself?** [getmcpads.com](https://www.getmcpads.com) is the hosted
-> version of this server, with TikTok Ads alongside Meta Ads, Google Ads, Pinterest Ads, GA4 and
-> Search Console behind a single endpoint, hosted OAuth, and cross-platform reporting.
-> Same tools, same safety model, no setup.
+> **Prefer a hosted connection?** [Get MCP Ads for TikTok Ads](https://www.getmcpads.com/tools/tiktok-ads?utm_source=github&utm_medium=readme&utm_campaign=tiktok_ads_hosted)
+> handles the server and OAuth flow. Create a workspace, connect the platform and
+> select the accounts or properties your assistant may read. Free is read only;
+> paid limits and supported writes are described on the site. Hosted and npm
+> releases can differ: check the current catalogue for the operation you need.
 
 ---
 
@@ -61,8 +62,8 @@ Here is an honest comparison.
 |---|---|---|---|
 | Hosting | **You host it.** stdio, local process | TikTok-hosted, remote | Hosted for you |
 | Data path | **Direct to the Business API.** No intermediary | Through TikTok's endpoint | Through our gateway |
-| Tools | **32** (27 read + 5 write) | ~400 flat, or ~40 in layered mode | 32, plus 5 other platforms |
-| Coverage | Reporting, structure, creatives, audiences | **Far broader** | Same as this server |
+| Tools | **32** (27 read + 5 write) | ~400 flat, or ~40 in layered mode | [Current hosted catalogue](https://www.getmcpads.com/tools/tiktok-ads) |
+| Coverage | Reporting, structure, creatives, audiences | **Far broader** | [Current hosted catalogue](https://www.getmcpads.com/tools/tiktok-ads) |
 | Writes | **Preview first**, applied only on `confirm: true` | Applied directly | Preview first |
 | Metric compatibility | **Query planner splits incompatible requests** | None documented | Same planner |
 | HTTP 200 on failure | **Checked on every call** | Handled internally | Checked |
@@ -313,14 +314,20 @@ Full policy and reporting instructions: [SECURITY.md](SECURITY.md).
 
 ## Looking for a managed, multi-platform version?
 
-This server does one platform, on your machine, with your token. That is on purpose.
+[Try hosted TikTok Ads](https://www.getmcpads.com/tools/tiktok-ads?utm_source=github&utm_medium=readme&utm_campaign=tiktok_ads_hosted) if you want to use this source without operating a local server.
+Get MCP Ads also connects advertising, Search Console and GA4 through one MCP URL.
+Source availability and plan limits are listed on the site; connecting an account is still required.
 
-If you'd rather not run it yourself, or you need TikTok Ads **alongside Meta Ads, Google Ads,
-Pinterest Ads, GA4 and Search Console** behind one endpoint, with hosted OAuth and
-cross-platform reporting, that's what we build at **[getmcpads.com](https://www.getmcpads.com)**.
+1. Follow the [TikTok Ads connection guide](https://www.getmcpads.com/guides/sources/tiktok-ads).
+2. Select the account or property your assistant may read.
+3. Connect [Claude](https://www.getmcpads.com/guides/setup/claude),
+   [ChatGPT](https://www.getmcpads.com/guides/setup/chatgpt) or
+   [Codex](https://www.getmcpads.com/guides/setup/codex).
+4. Try a read-only review: “Compare campaign delivery and conversion trends over complete periods. State missing data and do not change anything.”
 
-Same philosophy, less plumbing. This project stays open source and independently useful
-either way.
+See the [current hosted tool catalogue](https://www.getmcpads.com/tools/tiktok-ads)
+and [pricing](https://www.getmcpads.com/pricing) before choosing a paid plan.
+This Apache 2.0 adapter remains independently useful with your own credentials.
 
 ---
 
