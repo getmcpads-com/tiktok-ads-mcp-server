@@ -1,8 +1,8 @@
 {
   "name": "@getmcpads/tiktok-ads-mcp-server",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "mcpName": "com.getmcpads/tiktok-ads",
-  "description": "TikTok Ads MCP server: 33 read tools, 27 opt-in preview-first writes.",
+  "description": "TikTok Ads MCP server: 35 read tools, 29 opt-in preview-first writes.",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -42,10 +42,10 @@
     "tsx": "^4.0.0",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.0.0",
-    "vitest": "^3.2.7"
+    "vitest": "^4.1.11"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.12.0"
   },
   "files": [
     "dist/",
@@ -78,7 +78,7 @@
   "bugs": {
     "url": "https://github.com/getmcpads-com/tiktok-ads-mcp-server/issues"
   },
-  "author": "GetMCPAds (https://www.getmcpads.com)",
+  "author": "Emmanuel, getmcpads (https://www.getmcpads.com)",
   "publishConfig": {
     "access": "public"
   }

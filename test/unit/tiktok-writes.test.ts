@@ -24,6 +24,8 @@ const cases:[string,any][]=[
  ['tiktok_update_smart_plus_material_status',{smartPlusAdId:'500',materialIds:['600'],status:'DISABLE'}],
  ...['campaign','adgroup','ad'].map((n,i)=>[`tiktok_rename_${n}`,{entityId:['200','300','500'][i],name:'New business name'}] as [string,any]),
  ...['image','video'].map(n=>[`tiktok_upload_ad_${n}`,{bytesBase64:'aGVsbG8=',fileName:`test.${n==='image'?'png':'mp4'}`}] as [string,any]),
+ ['tiktok_create_custom_identity',{displayName:'GETMCPADS_TEST_IDENTITY'}],
+ ['tiktok_create_cta_portfolio',{portfolioContent:[{asset_content:'Learn More',asset_ids:['700']}]}],
 ];
 let requests:{url:URL,method:string,body:any,headers:any}[];let overrides:Record<string,any>;
 const run=async(name:string,args:any,conf=config)=>{const r=await collect('tiktok_ads',conf).find(t=>t.name===name)!.handler({advertiserId:'123',...args}) as any;try{return {...JSON.parse(r.content[0].text),isError:r.isError};}catch{return {error:r.content[0].text,isError:r.isError};}};
@@ -32,10 +34,35 @@ beforeEach(()=>{requests=[];overrides={};vi.stubGlobal('fetch',vi.fn(async(input
  const data=url.pathname.endsWith('/advertiser/info/')?{list:[{advertiser_id:'123',name:'Acme Company',currency:'USD',timezone:'Etc/GMT+5'}]}:method==='POST'?{campaign_id:'200',adgroup_id:'300',ad_ids:['500'],smart_plus_ad_id:'500'}:{list:[{advertiser_id:'123',campaign_id:'200',adgroup_id:'300',ad_id:'500',smart_plus_ad_id:'500',creative_list:[{ad_material_id:'600',material_operation_status:'DISABLE'}],operation_status:'DISABLE',budget_optimize_on:false,budget:50,schedule_start_time:'2027-01-05 15:00:00',schedule_end_time:'2027-02-05 15:00:00'}]};
  return new Response(JSON.stringify(overrides[method+':'+url.pathname]||{code:0,data,request_id:'fixture'}),{status:200});
 }));});
-afterEach(()=>vi.unstubAllGlobals());
+afterEach(()=>{vi.unstubAllGlobals();vi.useRealTimers();});
 it.each(cases)('%s previews without contacting any account',async(n,a)=>{const r=await run(n,a);expect(r.error).toBeUndefined();expect(r.applied).toBe(false);expect(r.environment).toBe('sandbox');expect(requests).toHaveLength(0);expect(JSON.stringify(r)).not.toContain('secret-fixture');});
 it.each(cases)('%s scopes and performs one sandbox mutation',async(n,a)=>{const r=await run(n,{...a,confirm:true});expect(r.error).toBeUndefined();expect(r.applied).toBe(true);expect(requests.filter(x=>x.method==='POST')).toHaveLength(1);expect(requests.every(x=>x.url.hostname==='sandbox-ads.tiktok.com')).toBe(true);expect(requests[0].url.pathname).toContain('/advertiser/info/');});
 it('classifies every added write correctly',()=>{expect(cases.map(([n])=>n).sort()).toEqual([...TIKTOK_EXTENDED_WRITES].sort());expect(TIKTOK_EXTENDED_WRITES.every(n=>writeToolNames('tiktok_ads').includes(n))).toBe(true);expect(allTools().find(x=>x.name==='tiktok_get_write_context')?.write).toBe(false);});
+it('creates the approved dynamic CTA portfolio without mutating an ad or its delivery',async()=>{
+ const portfolioContent=[{asset_content:'Learn More',asset_ids:['700','701']}];
+ overrides['POST:/open_api/v1.3/creative/portfolio/create/']={code:0,data:{creative_portfolio_id:'702'}};
+ expect(await run('tiktok_create_cta_portfolio',{portfolioContent,confirm:true})).toMatchObject({applied:true,result:{creative_portfolio_id:'702'}});
+ expect(requests.filter(r=>r.method==='POST').map(r=>({path:r.url.pathname,body:r.body}))).toEqual([{path:'/open_api/v1.3/creative/portfolio/create/',body:{advertiser_id:'123',creative_portfolio_type:'CTA',portfolio_content:portfolioContent}}]);
+});
+it('creates and verifies a custom advertising identity without creating or activating an ad',async()=>{
+ overrides['POST:/open_api/v1.3/identity/create/']={code:0,data:{identity_id:'identity-123'}};
+ overrides['GET:/open_api/v1.3/identity/get/']={code:0,data:{identity_list:[{identity_id:'identity-123',display_name:'Test identity',identity_type:'CUSTOMIZED_USER'}]}};
+ expect(await run('tiktok_create_custom_identity',{displayName:'Test identity',confirm:true})).toMatchObject({applied:true,result:{identity_id:'identity-123'},verification:{confirmed:true}});
+ expect(requests.filter(r=>r.method==='POST').map(r=>({path:r.url.pathname,body:r.body}))).toEqual([{path:'/open_api/v1.3/identity/create/',body:{advertiser_id:'123',display_name:'Test identity'}}]);
+});
+it('recommends carousel music for verified images instead of the incompatible default creative library',async()=>{
+ overrides['GET:/open_api/v1.3/file/image/ad/info/']={code:0,data:{list:[{image_id:'cover-a',is_carousel_usable:true,image_url:'https://example.com/a.png'},{image_id:'cover-b',is_carousel_usable:true,image_url:'https://example.com/b.png'}]}};
+ overrides['GET:/open_api/v1.3/file/music/get/']={code:0,request_id:'music-request',data:{musics:[{music_id:'music-a',name:'Test track',duration:20}]}};
+ const r=await run('tiktok_get_carousel_music',{imageIds:['cover-b','cover-a']});
+ expect(r).toMatchObject({imageIds:['cover-b','cover-a'],musicScene:'CAROUSEL_ADS',musics:[{music_id:'music-a',name:'Test track',duration:20}]});
+ expect(requests).toHaveLength(2);expect(requests.every(x=>x.method==='GET')).toBe(true);
+ const params=requests[1].url.searchParams;expect(params.get('music_scene')).toBe('CAROUSEL_ADS');expect(params.get('search_type')).toBe('SEARCH_BY_RECOMMEND');expect(JSON.parse(params.get('filtering')!)).toEqual({image_urls:['https://example.com/b.png','https://example.com/a.png']});
+ expect(allTools().find(x=>x.name==='tiktok_get_carousel_music')?.write).toBe(false);
+});
+it.each([[],[{image_id:'cover-a',is_carousel_usable:false,image_url:'https://example.com/a.png'}]].map(list=>({list})))('stops music selection if a selected image is absent or not carousel-usable',async({list})=>{
+ overrides['GET:/open_api/v1.3/file/image/ad/info/']={code:0,data:{list}};
+ const r=await run('tiktok_get_carousel_music',{imageIds:['cover-a','cover-b']});expect(r.error).toContain('carousel-usable');expect(requests).toHaveLength(1);
+});
 it('forces disabled creation on every regular creative',async()=>{await run('tiktok_create_ads',{...cases[4][1],confirm:true});expect(requests.find(x=>x.method==='POST')?.body.creatives[0].operation_status).toBe('DISABLE');});
 it('uses smart_plus_ad_ids for native Smart+ filtering and status',async()=>{await run('tiktok_update_smart_plus_ad_status',{entityId:'500',status:'DISABLE',confirm:true});expect(requests.find(r=>r.method==='POST')?.body.smart_plus_ad_ids).toEqual(['500']);const get=requests.find(r=>r.url.pathname.endsWith('/smart_plus/ad/get/'))!;expect(JSON.parse(get.url.searchParams.get('filtering')!)).toEqual({smart_plus_ad_ids:['500'],primary_status:'STATUS_ALL'});});
 it('converts offsets to native UTC while preserving major currency units',async()=>{const r=await run('tiktok_create_adgroup',cases[2][1]);expect(r.payload.schedule_start_time).toBe('2027-01-05 15:00:00');expect(r.payload.budget).toBe(50);});
@@ -53,13 +80,24 @@ it('checks real account currency',async()=>{expect((await run('tiktok_create_adg
 it('computes upload MD5 and sends multipart without echoing media',async()=>{const a={bytesBase64:'aGVsbG8=',fileName:'test.mp4'};expect(JSON.stringify(await run('tiktok_upload_ad_video',a))).not.toContain('aGVsbG8=');await run('tiktok_upload_ad_video',{...a,confirm:true});const post=requests.find(r=>r.method==='POST')!;expect(post.body).toBeInstanceOf(FormData);expect(post.body.get('video_signature')).toBe('5d41402abc4b2a76b9719d911017c592');expect(post.body.get('video_file')).toBeInstanceOf(Blob);expect(post.headers['content-type']).toBeUndefined();});
 it('surfaces TikTok application errors despite HTTP 200',async()=>{overrides['POST:/open_api/v1.3/campaign/create/']={code:40002,message:'Invalid objective'};expect(await run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true})).toMatchObject({isError:true,code:40002,outcome:'not_applied'});});
 it('does not retry ambiguous POSTs',async()=>{const orig=fetch;vi.stubGlobal('fetch',vi.fn((u:any,i:any)=>i?.method==='POST'?Promise.reject(new Error('network')):orig(u,i)));expect(await run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true})).toMatchObject({outcome:'unknown',retrySafe:false});});
-it('distinguishes acknowledged writes from failed readback',async()=>{overrides['GET:/open_api/v1.3/campaign/get/']={code:0,data:{list:[]}};const r=await run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true});expect(r.applied).toBe(true);expect(r.verification.confirmed).toBe(false);});
+it('distinguishes acknowledged writes from persistently missing readback without replaying the write',async()=>{vi.useFakeTimers();overrides['GET:/open_api/v1.3/campaign/get/']={code:0,data:{list:[]}};const pending=run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true});await vi.runAllTimersAsync();const r=await pending;expect(r.applied).toBe(true);expect(r.verification.confirmed).toBe(false);expect(requests.filter(x=>x.method==='POST')).toHaveLength(1);expect(requests.filter(x=>x.url.pathname.endsWith('/campaign/get/'))).toHaveLength(4);});
+it('waits for the exact newly-created object to become readable, using only GET retries',async()=>{
+ vi.useFakeTimers();const original=fetch;let reads=0;
+ vi.stubGlobal('fetch',vi.fn(async(u:any,i:any)=>{const response=await original(u,i);if(String(u).includes('/campaign/get/')&&++reads<3)return Response.json({code:0,data:{list:[]}});return response;}));
+ const pending=run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true});await vi.runAllTimersAsync();
+ expect(await pending).toMatchObject({applied:true,verification:{confirmed:true}});expect(reads).toBe(3);expect(requests.filter(x=>x.method==='POST')).toHaveLength(1);
+});
+it.each([{code:40001,message:'Permission denied'},{code:0,data:{list:[{campaign_id:'200',advertiser_id:'999',operation_status:'DISABLE'}]}}])('does not retry a permission failure or a mismatched owner during creation readback',async response=>{
+ overrides['GET:/open_api/v1.3/campaign/get/']=response;
+ expect(await run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true})).toMatchObject({applied:true,verification:{confirmed:false}});
+ expect(requests.filter(x=>x.url.pathname.endsWith('/campaign/get/'))).toHaveLength(1);expect(requests.filter(x=>x.method==='POST')).toHaveLength(1);
+});
 it('checks actual ad group membership on ad updates',async()=>{overrides['GET:/open_api/v1.3/ad/get/']={code:0,data:{list:[{ad_id:'500',advertiser_id:'123',adgroup_id:'777'}]}};expect((await run('tiktok_update_ads',{...cases[5][1],confirm:true})).error).toContain('declared ad group');expect(requests.every(r=>r.method==='GET')).toBe(true);});
 
 it.each(['tiktok_update_adgroup_configuration','tiktok_update_adgroup_budget'])('checks the existing parent budget on %s',async name=>{overrides['GET:/open_api/v1.3/campaign/get/']={code:0,data:{list:[{campaign_id:'200',advertiser_id:'123',budget_optimize_on:true}]}};const args=name==='tiktok_update_adgroup_budget'?{adGroupId:'300',budget:60}:{configuration:{adgroup_id:'300',budget:60},currency:'USD'};expect((await run(name,{...args,confirm:true})).error).toContain('Campaign budget');expect(requests.every(r=>r.method==='GET')).toBe(true);});
 it('preserves uncertain outcomes on legacy mutations',async()=>{const orig=fetch;vi.stubGlobal('fetch',vi.fn((u:any,i:any)=>i?.method==='POST'?Promise.reject(new Error('network')):orig(u,i)));expect(await run('tiktok_update_campaign_budget',{campaignId:'200',budget:100,confirm:true})).toMatchObject({isError:true,outcome:'unknown',retrySafe:false});});
 
-it('rejects a lifetime ad group under a daily-budget campaign',async()=>{overrides['GET:/open_api/v1.3/campaign/get/']={code:0,data:{list:[{campaign_id:'200',advertiser_id:'123',budget_mode:'BUDGET_MODE_DAY'}]}};expect((await run('tiktok_create_adgroup',{...cases[2][1],configuration:{...group,budget_mode:'BUDGET_MODE_TOTAL'},confirm:true})).error).toContain('daily-budget');expect(requests.every(r=>r.method==='GET')).toBe(true);});
+it('rejects a lifetime ad group under a daily-budget campaign',async()=>{overrides['GET:/open_api/v1.3/campaign/get/']={code:0,data:{list:[{campaign_id:'200',advertiser_id:'123',budget_mode:'BUDGET_MODE_DAY'}]}};expect((await run('tiktok_create_adgroup',{...cases[2][1],configuration:{...group,budget_mode:'BUDGET_MODE_TOTAL',schedule_type:'SCHEDULE_START_END',schedule_end_time:'2027-02-05T00:00:00Z'},confirm:true})).error).toContain('daily-budget');expect(requests.every(r=>r.method==='GET')).toBe(true);});
 
 it.each([
  {ad_format:'SINGLE_IMAGE',image_ids:['image-1'],identity_type:'CUSTOM',identity_id:'700'},
@@ -90,11 +128,11 @@ it('requires currency even when only a nested keyword bid changes',async()=>{
 it('rejects negative keyword bids before all network calls',async()=>{expect((await run('tiktok_update_adgroup_configuration',{configuration:{adgroup_id:'300',search_keywords:[{keyword:'analytics',keyword_bid:-2}]},currency:'USD',confirm:true})).error).toContain('non-negative');expect(requests).toHaveLength(0);});
 it('rejects non-native keyword match enums before network calls',async()=>{expect((await run('tiktok_update_adgroup_configuration',{configuration:{adgroup_id:'300',search_keywords:[{keyword:'analytics',match_type:'BROAD'}]},confirm:true})).error).toBeTruthy();expect(requests).toHaveLength(0);});
 it.each(['BROAD_WORD','PHRASE_WORD','PRECISE_WORD'])('accepts the native keyword match %s',async match_type=>{const r=await run('tiktok_update_adgroup_configuration',{configuration:{adgroup_id:'300',search_keywords:[{keyword:'analytics',match_type}]}});expect(r.error).toBeUndefined();expect(r.payload.search_keywords[0].match_type).toBe(match_type);expect(requests).toHaveLength(0);});
-it('never follows a provider recommendation to change the sandbox host',async()=>{overrides['POST:/open_api/v1.3/campaign/create/']={code:40010,message:'Please use business-api.tiktok.com with v1.3'};const r=await run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true});expect(r.code).toBe(40010);expect(requests.filter(x=>x.method==='POST')).toHaveLength(1);expect(requests.every(x=>x.url.hostname==='sandbox-ads.tiktok.com')).toBe(true);expect(vi.mocked(fetch).mock.calls.every(([,init])=>init?.redirect==='error')).toBe(true);});
+it('never follows a provider recommendation to change the sandbox host',async()=>{overrides['POST:/open_api/v1.3/campaign/create/']={code:40010,message:'Please use business-api.tiktok.com with v1.3'};const r=await run('tiktok_create_campaign_advanced',{...cases[0][1],confirm:true});expect(r.code).toBe(40010);expect(requests.filter(x=>x.method==='POST')).toHaveLength(1);expect(requests.every(x=>x.url.hostname==='sandbox-ads.tiktok.com')).toBe(true);expect(vi.mocked(fetch).mock.calls.every(([,init])=>init?.redirect==='manual')).toBe(true);});
 it('stops a redirect after one request and preserves an uncertain write outcome',async()=>{
  vi.mocked(fetch).mockResolvedValueOnce(new Response(null,{status:302,headers:{location:'https://business-api.tiktok.com/open_api/v1.3/campaign/create/'}}));
  await expect(tiktokWriteApi(config).call('campaign/create/','POST',{advertiser_id:'123'})).rejects.toMatchObject({outcome:'unknown'});
- expect(fetch).toHaveBeenCalledTimes(1);expect(vi.mocked(fetch).mock.calls[0][1]?.redirect).toBe('error');
+ expect(fetch).toHaveBeenCalledTimes(1);expect(vi.mocked(fetch).mock.calls[0][1]?.redirect).toBe('manual');
 });
 const smartWeb={campaign_name:'Smart+ exact name',objective_type:'WEB_CONVERSIONS',sales_destination:'WEBSITE',budget:100,request_id:'1770000000000001'};
 it.each(['6ea500d4-1510-4eee-8192-767919c70935','9223372036854775808','-1','1.5'])('rejects invalid Smart+ campaign request_id %s without a native call',async request_id=>{const r=await run('tiktok_create_smart_plus_campaign',{configuration:{...smartWeb,request_id},currency:'USD',confirm:true});expect(r.error).toBeTruthy();expect(requests).toHaveLength(0);});
@@ -136,6 +174,21 @@ it('reads paused Smart+ parents with STATUS_ALL before an ad mutation',async()=>
  const previous=fetch;vi.stubGlobal('fetch',vi.fn((input:any,init:any)=>{const url=new URL(String(input));if(url.pathname==='/open_api/v1.3/smart_plus/adgroup/get/'&&JSON.parse(url.searchParams.get('filtering')||'{}').primary_status!=='STATUS_ALL')return Promise.resolve(new Response(JSON.stringify({code:0,data:{list:[]}})));return previous(input,init);}));
  const args=cases.find(([n])=>n==='tiktok_create_smart_plus_ad')![1];expect(await run('tiktok_create_smart_plus_ad',{...args,confirm:true})).toMatchObject({applied:true});
 });
+it.each(['image','video'] as const)('exposes a stable %s media ID across native response envelopes without losing the receipt',async kind=>{
+ const item={[`${kind}_id`]:'media-123'};
+ for(const data of [item,[item],{list:[item]}]){
+  overrides[`POST:/open_api/v1.3/file/${kind}/ad/upload/`]={code:0,data};
+  const result=await run(`tiktok_upload_ad_${kind}`,{bytesBase64:'aGVsbG8=',fileName:kind==='image'?'test.png':'test.mp4',confirm:true});
+  expect(result).toMatchObject({applied:true,media:{kind,id:'media-123'},result:data});
+ }
+});
+it.each([[],[{video_id:'one'},{video_id:'two'}],[{video_id:123}],{}])('does not guess a media ID from an ambiguous or malformed native receipt %j',async data=>{
+ overrides['POST:/open_api/v1.3/file/video/ad/upload/']={code:0,data};
+ const result=await run('tiktok_upload_ad_video',{bytesBase64:'aGVsbG8=',fileName:'test.mp4',confirm:true});
+ expect(result).toMatchObject({applied:true,media:{kind:'video',unresolved:true},result:data});
+ expect(result.media.id).toBeUndefined();
+ expect(requests.filter(r=>r.method==='POST')).toHaveLength(1);
+});
 it('replays the accepted Smart+ value/video payload shape through MCP handlers',async()=>{
  overrides['GET:/open_api/v1.3/advertiser/info/']={code:0,data:{list:[{advertiser_id:'123',currency:'EUR',timezone:'Etc/GMT-1'}]}};
  overrides['GET:/open_api/v1.3/smart_plus/campaign/get/']={code:0,data:{list:[{advertiser_id:'123',campaign_id:'200',operation_status:'DISABLE',budget:20,budget_optimize_on:true,budget_mode:'BUDGET_MODE_DYNAMIC_DAILY_BUDGET'}]}};
@@ -144,4 +197,14 @@ it('replays the accepted Smart+ value/video payload shape through MCP handlers',
  const ad={adgroup_id:'300',ad_name:'Exact business ad_TEST',creative_list:[{creative_info:{ad_format:'SINGLE_VIDEO',video_info:{video_id:'video-post-it'},image_info:[{web_uri:'cover-post-it'}],identity_type:'BC_AUTH_TT',identity_id:'identity-fixture',identity_authorized_bc_id:'702',aigc_disclosure_type:'SELF_DISCLOSURE'}}],ad_text_list:[{ad_text:'Autumn collection'}],landing_page_url_list:[{landing_page_url:'https://example.com/new'}],ad_configuration:{call_to_action_id:'703',dark_post_status:'ON',creative_auto_add_toggle:false,creative_auto_enhancement_strategy_list:[],product_info_enabled:'UNSET',utm_params:[{key:'utm_source',value:'tiktok'}]}};
  for(const [name,configuration] of [['tiktok_create_smart_plus_campaign',campaign],['tiktok_create_smart_plus_adgroup',group],['tiktok_create_smart_plus_ad',ad]] as const){expect(await run(name,{configuration,currency:'EUR',confirm:true})).toMatchObject({applied:true});}
  const writes=requests.filter(r=>r.method==='POST');expect(writes).toHaveLength(3);expect(writes.every(r=>r.body.operation_status==='DISABLE')).toBe(true);expect(writes[0].body.budget).toBe(20);expect(writes[1].body).toMatchObject({schedule_start_time:'2026-09-08 23:00:00',schedule_end_time:'2026-09-11 22:59:59',targeting_spec:{location_ids:['3017382']}});expect(writes[1].body.budget).toBeUndefined();expect(writes[2].body.creative_list).toEqual(ad.creative_list);expect(writes[2].body.ad_name).toBe(ad.ad_name);
+});
+it('supports music selection for one-card TikTok image ads',async()=>{
+ overrides['GET:/open_api/v1.3/file/image/ad/info/']={code:0,data:{list:[{image_id:'cover-a',is_carousel_usable:true,image_url:'https://example.com/a.png'}]}};
+ overrides['GET:/open_api/v1.3/file/music/get/']={code:0,data:{musics:[{music_id:'music-a'}]}};
+ expect(await run('tiktok_get_carousel_music',{imageIds:['cover-a']})).toMatchObject({imageIds:['cover-a'],musics:[{music_id:'music-a'}]});
+ expect(requests.every(r=>r.method==='GET')).toBe(true);
+ const musicRequest=requests.find(r=>r.url.pathname.includes('/file/music/get/'));
+ expect(JSON.parse(musicRequest!.url.searchParams.get('filtering')!)).toEqual({image_urls:['https://example.com/a.png','https://example.com/a.png']});
+ const single=await run('tiktok_create_ads',{configuration:{adgroup_id:'300',creatives:[{...creative,ad_format:'CAROUSEL_ADS',video_id:undefined,image_ids:['cover-a'],music_id:'music-a'}]}});
+ expect(single.payload.creatives[0]).toMatchObject({ad_format:'CAROUSEL_ADS',image_ids:['cover-a'],operation_status:'DISABLE'});
 });

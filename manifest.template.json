@@ -1,11 +1,11 @@
 {
   "manifest_version": "0.3",
   "name": "tiktok-ads-mcp-server",
-  "display_name": "TikTok Ads by Get MCP Ads",
-  "version": "1.1.0",
-  "description": "TikTok Ads MCP server: 33 read tools, 27 opt-in preview-first writes.",
+  "display_name": "TikTok Ads by getmcpads",
+  "version": "2.0.0",
+  "description": "TikTok Ads MCP server: 35 read tools, 29 opt-in preview-first writes.",
   "author": {
-    "name": "GetMCPAds",
+    "name": "getmcpads",
     "url": "https://www.getmcpads.com"
   },
   "homepage": "https://www.getmcpads.com/tools/tiktok-ads",
@@ -69,7 +69,7 @@
     "tiktok_enable_writes": {
       "type": "string",
       "title": "Tiktok Enable Writes",
-      "description": "Set to 1 to expose 27 write tools. Default calls preview; confirm:true applies changes.",
+      "description": "Set to 1 to expose 29 write tools. Default calls preview; confirm:true applies changes.",
       "required": false,
       "sensitive": false,
       "default": "0"
@@ -91,7 +91,7 @@
       "linux"
     ],
     "runtimes": {
-      "node": ">=18"
+      "node": ">=22.12"
     }
   }
 }

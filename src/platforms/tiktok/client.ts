@@ -9,6 +9,7 @@
 // Standalone HTTP client for TikTok Business API
 // TikTok Business API client. Read paths only; writes live in writes.ts.
 
+import { parseTikTokJson } from "../../core/tiktok-json.js";
 import { logger } from "../../core/logger.js";
 import { RateLimiter } from "../../core/rate-limiter.js";
 import {
@@ -236,7 +237,7 @@ export class TikTokClient {
         );
       }
 
-      const data = await response.json() as Record<string, unknown>;
+      const data = parseTikTokJson(await response.text()) as Record<string, unknown>;
       logger.debug("tiktok", `Response code: ${data.code}`);
 
       // Check for API-level errors
@@ -289,7 +290,7 @@ export class TikTokClient {
         );
       }
 
-      const data = await response.json() as Record<string, unknown>;
+      const data = parseTikTokJson(await response.text()) as Record<string, unknown>;
 
       if (data.code !== undefined && data.code !== 0) {
         throw new TikTokApiException(
