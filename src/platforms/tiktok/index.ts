@@ -15,10 +15,10 @@ export function registerTikTok(server: McpServer, config: TikTokConfig): void {
   registerTikTokTools(server, config);
   registerTikTokExtendedWrites(server as never, config as never, true);
   registerTikTokResources(server, config.enableWrites ?? false);
-  logger.info("tiktok", "Registered 33 read tools and 5 resources");
+  logger.info("tiktok", "Registered 35 read tools and 5 resources");
 
   if (config.enableWrites) {
     registerTikTokWrites(server as never, config as never);
-    logger.info("tiktok", "Registered 27 write tools (every one previews before it applies)");
+    logger.info("tiktok", "Registered 29 write tools (every one previews before it applies)");
   }
 }

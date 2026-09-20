@@ -1,8 +1,8 @@
 {
   "serverInfo": {
     "name": "@getmcpads/tiktok-ads-mcp-server",
-    "title": "TikTok Ads MCP server: 33 read tools, 27 opt-in preview-first writes.",
-    "version": "1.1.0",
+    "title": "TikTok Ads MCP server: 35 read tools, 29 opt-in preview-first writes.",
+    "version": "2.0.0",
     "websiteUrl": "https://www.getmcpads.com/tools/tiktok-ads",
     "icons": [
       {
@@ -54,7 +54,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -109,7 +109,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -177,7 +177,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -257,7 +257,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -355,7 +355,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -453,7 +453,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -611,7 +611,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -686,7 +686,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -860,7 +860,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -938,7 +938,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1016,7 +1016,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1096,7 +1096,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1195,7 +1195,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1282,7 +1282,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1373,7 +1373,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1457,7 +1457,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1526,7 +1526,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1615,7 +1615,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1697,7 +1697,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1780,7 +1780,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1893,7 +1893,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -1989,7 +1989,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2081,7 +2081,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2180,7 +2180,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2280,7 +2280,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2358,7 +2358,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2436,7 +2436,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2516,7 +2516,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2637,7 +2637,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2867,7 +2867,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -2968,7 +2968,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -3039,7 +3039,156 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "tiktok_get_carousel_music",
+      "title": "tiktok get carousel music",
+      "description": "Get TikTok music recommendations for exactly the uploaded images in a standard, non-catalog image ad (one card) or carousel. Verifies each image is carousel-usable. Read-only; select a returned music_id in the approval preview and use the same images in the ad. Music is for use on TikTok only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "advertiserId": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Exact TikTok numeric ID as a string, never a rounded JavaScript number."
+          },
+          "imageIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "minItems": 1,
+            "maxItems": 35,
+            "description": "Ordered list of 1-35 distinct uploaded image IDs owned by this advertiser. Use the exact same images in the approved carousel."
+          }
+        },
+        "required": [
+          "advertiserId",
+          "imageIds"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "tiktok_get_uploaded_video",
+      "title": "tiktok get uploaded video",
+      "description": "Read one uploaded video from this advertiser’s media library. Returns ready only after its media information is available with positive duration and dimensions. Does not upload again.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "advertiserId": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Exact TikTok numeric ID as a string, never a rounded JavaScript number."
+          },
+          "videoId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Exact uploaded video ID returned by TikTok."
+          }
+        },
+        "required": [
+          "advertiserId",
+          "videoId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -3124,7 +3273,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -3137,6 +3286,185 @@
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "tiktok_create_cta_portfolio",
+      "title": "tiktok create cta portfolio",
+      "description": "Create a dynamic CTA portfolio from the exact approved recommendations returned by creative/cta/recommend for this advertiser. Use its result.creative_portfolio_id as ad_configuration.call_to_action_id for Smart+ Spark website/app ads. Creates no ad and changes no delivery status. Local preview by default. No automatic retry; advertiser ownership is checked before applying.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "advertiserId": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Exact TikTok numeric ID as a string, never a rounded JavaScript number."
+          },
+          "portfolioContent": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "asset_content": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Exact recommended CTA text, such as Learn More."
+                },
+                "asset_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^\\d+$",
+                    "description": "Exact TikTok numeric ID as a string, never a rounded JavaScript number."
+                  },
+                  "minItems": 1,
+                  "maxItems": 100,
+                  "description": "Exact asset_ids returned with this CTA text for this advertiser."
+                }
+              },
+              "required": [
+                "asset_content",
+                "asset_ids"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "Reviewed CTA texts and their advertiser-specific IDs. Obtain them through tiktok_get_read_endpoint at creative/cta/recommend; never substitute generic CTA enums."
+          },
+          "confirm": {
+            "type": "boolean",
+            "description": "Apply only when true. Default is a local preview without any TikTok call. Never retry an uncertain POST automatically."
+          }
+        },
+        "required": [
+          "advertiserId",
+          "portfolioContent"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "tiktok_create_custom_identity",
+      "title": "tiktok create custom identity",
+      "description": "Create an advertiser-owned CUSTOMIZED_USER advertising identity for Pangle or Global App Bundle. Does not create a public TikTok profile or enable delivery. Custom identities cannot be used for new TikTok-placement ads. Uses TikTok’s default avatar. Local preview by default. No automatic retry; advertiser ownership is checked before applying.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "advertiserId": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Exact TikTok numeric ID as a string, never a rounded JavaScript number."
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Exact public-facing advertising identity name approved by the user. This is not an ad or campaign name."
+          },
+          "confirm": {
+            "type": "boolean",
+            "description": "Apply only when true. Default is a local preview without any TikTok call. Never retry an uncertain POST automatically."
+          }
+        },
+        "required": [
+          "advertiserId",
+          "displayName"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
         "openWorldHint": true
       },
       "execution": {
@@ -3334,7 +3662,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -3443,7 +3771,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -4167,7 +4495,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -4729,7 +5057,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -4999,7 +5327,7 @@
                     },
                     "music_id": {
                       "type": "string",
-                      "description": "Native TikTok music id. Check the current entity and applicable objective before supplying it."
+                      "description": "For CAROUSEL_ADS, use a carousel-compatible music_id from tiktok_get_carousel_music for these exact images. Generic CREATIVE_ASSET library music is not interchangeable."
                     },
                     "page_id": {
                       "type": "string",
@@ -5226,7 +5554,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -5480,7 +5808,7 @@
                     },
                     "music_id": {
                       "type": "string",
-                      "description": "Native TikTok music id. Check the current entity and applicable objective before supplying it."
+                      "description": "For CAROUSEL_ADS, use a carousel-compatible music_id from tiktok_get_carousel_music for these exact images. Generic CREATIVE_ASSET library music is not interchangeable."
                     },
                     "page_id": {
                       "type": "string",
@@ -5652,7 +5980,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -5842,7 +6170,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -5943,7 +6271,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -6498,7 +6826,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -6877,7 +7205,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -7177,7 +7505,7 @@
                           "properties": {
                             "music_id": {
                               "type": "string",
-                              "description": "Native TikTok music id. Check the current entity and applicable objective before supplying it."
+                              "description": "For CAROUSEL_ADS, use a carousel-compatible music_id from tiktok_get_carousel_music for these exact images. Generic CREATIVE_ASSET library music is not interchangeable."
                             }
                           },
                           "required": [
@@ -7346,7 +7674,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -7587,7 +7915,7 @@
                           "properties": {
                             "music_id": {
                               "type": "string",
-                              "description": "Native TikTok music id. Check the current entity and applicable objective before supplying it."
+                              "description": "For CAROUSEL_ADS, use a carousel-compatible music_id from tiktok_get_carousel_music for these exact images. Generic CREATIVE_ASSET library music is not interchangeable."
                             }
                           },
                           "required": [
@@ -7759,7 +8087,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -7843,7 +8171,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -7927,7 +8255,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8011,7 +8339,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8095,7 +8423,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8191,7 +8519,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8273,7 +8601,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8355,7 +8683,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8437,7 +8765,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8459,7 +8787,7 @@
     {
       "name": "tiktok_upload_ad_image",
       "title": "tiktok upload ad image",
-      "description": "Import a image from a public HTTPS media URL or base64 file (up to 5 MiB). TikTok may process it asynchronously; acceptance is not proof the media is ready. Local preview by default. No automatic retry; advertiser ownership is checked before applying.",
+      "description": "Import a image from a public HTTPS media URL or base64 file (up to 5 MiB). A single returned media ID is exposed at media.id, with the native receipt preserved in result. TikTok may process it asynchronously; acceptance is not proof the media is ready. Local preview by default. No automatic retry; advertiser ownership is checked before applying.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -8485,7 +8813,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Uploaded filename including extension. This is not an ad name."
+            "description": "Advertiser-unique uploaded filename including extension, separate from the business ad name. Prefer a stable upload UUID suffix; preserve it on retries. If the material already exists, resolve and reuse its owned native ID instead of uploading the same filename again."
           },
           "confirm": {
             "type": "boolean",
@@ -8526,7 +8854,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8548,7 +8876,7 @@
     {
       "name": "tiktok_upload_ad_video",
       "title": "tiktok upload ad video",
-      "description": "Import a video from a public HTTPS media URL or base64 file (up to 5 MiB). TikTok may process it asynchronously; acceptance is not proof the media is ready. Local preview by default. No automatic retry; advertiser ownership is checked before applying.",
+      "description": "Import a video from a public HTTPS media URL or base64 file (up to 5 MiB). A single returned media ID is exposed at media.id, with the native receipt preserved in result. TikTok may process it asynchronously; acceptance is not proof the media is ready. Local preview by default. No automatic retry; advertiser ownership is checked before applying.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -8574,7 +8902,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Uploaded filename including extension. This is not an ad name."
+            "description": "Advertiser-unique uploaded filename including extension, separate from the business ad name. Prefer a stable upload UUID suffix; preserve it on retries. If the material already exists, resolve and reuse its owned native ID instead of uploading the same filename again."
           },
           "confirm": {
             "type": "boolean",
@@ -8615,7 +8943,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8697,7 +9025,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8798,7 +9126,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8877,7 +9205,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -8959,7 +9287,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [
@@ -9047,7 +9375,7 @@
                 "type": "null"
               }
             ],
-            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query. Existing MCP Apps fields are returned alongside result."
+            "description": "Original tool result: parsed JSON when the text is JSON, otherwise the text or multiple MCP content blocks. Provider fields depend on the selected query."
           }
         },
         "required": [

@@ -621,12 +621,12 @@ export function registerTikTokTools(server: McpServer, config: TikTokConfig): vo
       statusFilter: z.enum(["CAMPAIGN_STATUS_ENABLE", "CAMPAIGN_STATUS_DISABLE", "CAMPAIGN_STATUS_DELETE"]).optional(),
       limit: limitSchema,
     },
-    async ({ advertiserId, statusFilter, limit }) => {
+    async ({ advertiserId, statusFilter, limit = 100 }) => {
       try {
         const params: Record<string, string> = {
           advertiser_id: advertiserId,
           page_size: String(limit),
-          fields: JSON.stringify(["campaign_id", "campaign_name", "campaign_type", "budget", "budget_mode", "status", "operation_status", "objective_type", "create_time", "modify_time"]),
+          fields: JSON.stringify(["campaign_id", "campaign_name", "campaign_type", "budget", "budget_mode", "operation_status", "secondary_status", "objective_type", "create_time", "modify_time"]),
         };
         if (statusFilter) params.filtering = JSON.stringify({ status: statusFilter });
         const result = await client.fetchUrl(`/campaign/get/?${new URLSearchParams(params).toString()}`);
@@ -666,7 +666,7 @@ export function registerTikTokTools(server: McpServer, config: TikTokConfig): vo
       adgroupId: z.string().optional().describe("Filter by ad group ID"),
       limit: limitSchema,
     },
-    async ({ advertiserId, adgroupId, limit }) => {
+    async ({ advertiserId, adgroupId, limit = 100 }) => {
       try {
         const params: Record<string, string> = {
           advertiser_id: advertiserId,

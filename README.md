@@ -1,8 +1,10 @@
 # tiktok-ads-mcp-server
 
+
+
 [![CI](https://github.com/getmcpads-com/tiktok-ads-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/getmcpads-com/tiktok-ads-mcp-server/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Node](https://img.shields.io/badge/node-%E2%89%A518-brightgreen.svg)](package.json)
+[![Node](https://img.shields.io/badge/node-%E2%89%A522.12-brightgreen.svg)](package.json)
 
 An open-source [Model Context Protocol](https://modelcontextprotocol.io) server for the
 **TikTok Business API**. It lets Claude, ChatGPT, Cursor or any MCP client read and analyse
@@ -24,12 +26,30 @@ Also listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as *
 
 ---
 
+
+## Current source release
+
+Version 2.0.0 requires **Node.js 22.12 or newer**. CI checks Node 22 and 24.
+This source catalog contains **35 read tools** and **29 write tools**.
+Native API tools are included. Hosted creative galleries, visual editors, Launcher storage and MCP Apps UI are excluded.
+This is a major source update because Node 18 and 20 are no longer supported.
+Source commits, npm releases and MCP Registry publication are separate steps. Until this version is published, use the source installation below to run this exact revision.
+
+```bash
+git clone https://github.com/getmcpads-com/tiktok-ads-mcp-server.git
+cd tiktok-ads-mcp-server
+npm ci
+npm run build
+```
+
+Configure your MCP client to run `node` with the absolute path to `dist/cli.js` and the environment variables documented below.
+
 ## What you get
 
 | | |
 |---|---|
-| **33 read tools** | Campaigns, ad groups, ads, creatives, audiences, pixels, events, Spark Ads, catalogs, delivery diagnostics |
-| **27 write tools** | Off by default. Campaign and ad group status, budgets, campaign creation. Each one **previews before it applies** |
+| **35 read tools** | Campaigns, ad groups, ads, creatives, audiences, pixels, events, Spark Ads, catalogs, delivery diagnostics |
+| **29 write tools** | Off by default. Campaign and ad group status, budgets, campaign creation. Each one **previews before it applies** |
 | **277 metrics** | Including derived ones computed client-side |
 | **16 dimensions** | With a compatibility matrix that catches invalid combinations before they hit the API |
 | **5 resources** | Live catalogues the model can read: metrics, dimensions, compatibility rules, 12 workflow recipes |
@@ -49,40 +69,6 @@ several valid API calls and merges the results** instead of failing.
 **TikTok answers HTTP 200 even when the call failed.** The applicative `code` field is what
 decides. A client that trusts the HTTP status reports imaginary successes back to the model,
 which then reasons on data that was never returned. Every call here checks `code` first.
-
----
-
-## How this compares to TikTok's own MCP server
-
-TikTok ships an official MCP server, announced at TikTok World '26 and hosted at
-`business-api.tiktok.com/open_mcp/`. It is a serious product, and it is bigger than this one.
-Here is an honest comparison.
-
-| | **This server** | TikTok's official server | [getmcpads.com](https://www.getmcpads.com) |
-|---|---|---|---|
-| Hosting | **You host it.** stdio, local process | TikTok-hosted, remote | Hosted for you |
-| Data path | **Direct to the Business API.** No intermediary | Through TikTok's endpoint | Through our gateway |
-| Tools | **32** (27 read + 5 write) | ~400 flat, or ~40 in layered mode | [Current hosted catalogue](https://www.getmcpads.com/tools/tiktok-ads) |
-| Coverage | Reporting, structure, creatives, audiences | **Far broader** | [Current hosted catalogue](https://www.getmcpads.com/tools/tiktok-ads) |
-| Writes | **Preview first**, applied only on `confirm: true` | Applied directly | Preview first |
-| Metric compatibility | **Query planner splits incompatible requests** | None documented | Same planner |
-| HTTP 200 on failure | **Checked on every call** | Handled internally | Checked |
-| Auditable | **Yes.** Apache-2.0, read every line | No | This server, audited |
-| Modifiable | **Fork it** | No | No |
-
-**Be clear about the trade-off.** If you want the widest possible surface of the TikTok API,
-the official server covers far more endpoints than this one does, and you should use it.
-
-What this server offers instead is a **curated set**. TikTok themselves ship a layered mode
-that exposes about 40 tools rather than 400, because loading hundreds of tool definitions
-fills the model's context and makes it pick the wrong tool more often. 27 well-described
-read tools with a compatibility-aware planner is a deliberate design choice, not a gap.
-
-**Choose the official server** for breadth, or if you don't need to see the code.
-**Choose this one** if you need your data to stay on your infrastructure, want to audit or
-extend what the model can do, or want writes that cannot fire on the first call.
-**Choose [getmcpads.com](https://www.getmcpads.com)** if you want this server's capabilities
-without running it, or you need more than one ad platform in the same conversation.
 
 ---
 
@@ -388,3 +374,12 @@ The hosted GetMCPAds service additionally provides OAuth account selection and i
 ### Desktop bundle
 
 Run `npm run bundle -- /path/to/output` to build a `.mcpb` desktop bundle from the current catalogue. The bundle contains production dependencies, documented local configuration, and complete tool definitions. Provider credentials are entered locally during installation; write tools remain disabled unless explicitly enabled.
+
+## Additional native tools
+
+| Tool | Purpose |
+|---|---|
+| `tiktok_get_carousel_music` | Get TikTok music recommendations for exactly the uploaded images in a standard, non-catalog image ad (one card) or carousel. |
+| `tiktok_get_uploaded_video` | Read one uploaded video from this advertiser’s media library. |
+| `tiktok_create_cta_portfolio` | Create a dynamic CTA portfolio from the exact approved recommendations returned by creative/cta/recommend for this advertiser. |
+| `tiktok_create_custom_identity` | Create an advertiser-owned CUSTOMIZED_USER advertising identity for Pangle or Global App Bundle. |

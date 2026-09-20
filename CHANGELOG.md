@@ -1,4 +1,13 @@
 # Changelog
+## 2.0.0 - 2026-09-20
+
+- Preserve exact unquoted 64-bit IDs in read, write and verification responses.
+- Fix campaign field selection and default list limits.
+- Update native write validation for budgets, schedules, targeting and readback. Add carousel music, uploaded-video readiness, CTA portfolio and custom identity tools.
+- Require Node.js 22.12 or newer and check Node 22/24 in CI.
+- Update vulnerable dependencies and regenerate the MCP catalog.
+- No hosted creative UI or MCP Apps integrations.
+
 
 ## 1.1.0
 

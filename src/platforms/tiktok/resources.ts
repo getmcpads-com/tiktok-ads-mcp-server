@@ -41,7 +41,9 @@ const TIKTOK_TOOL_MANIFEST = [
   { name: "tiktok_get_targeting_catalog", tier: "broad-read", scope: "read-only", purpose: "Read planning, targeting, device, contextual, and Search Ads dictionaries." },
   { name: "tiktok_get_read_endpoint", tier: "broad-read", scope: "read-only", purpose: "Call a validated documented v1.3 JSON GET endpoint while blocking OAuth, mutations, downloads, and lead-record paths." },
   {name:"tiktok_get_write_context",tier:"P1",scope:"read-only",purpose:"Inspect the selected advertiser and entity configuration before composing a write."},
-] as const;
+
+    {"name": "tiktok_get_carousel_music", "purpose": "Get TikTok music recommendations for exactly the uploaded images in a standard, non-catalog image ad (one card) or carousel"},
+    {"name": "tiktok_get_uploaded_video", "purpose": "Read one uploaded video from this advertiser’s media library"},] as const;
 
 const TIKTOK_RECIPES = [
   {name:"configured_and_delivered_audience",goal:"Audit configured targeting separately from delivered demographics, including Smart+.",steps:["Call tiktok_get_targeting with advertiserId and smartPlus:true for upgraded Smart+; follow pagination and preserve targeting_spec.","Resolve audience references using tiktok_get_audiences and tiktok_get_audience_details; resolve geo/interest IDs using tiktok_get_targeting_catalog.","Call tiktok_get_audience_report or tiktok_get_insights with dimensions age/gender at the required campaign/adgroup level and an explicit date range.","Never turn separate age and gender reports into a cross-tab, infer missing settings, or call targeting similarity measured audience overlap."]},

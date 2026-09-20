@@ -1,4 +1,4 @@
-/** Copyright 2026 GetMCPAds. SPDX-License-Identifier: Apache-2.0 */
+/** Copyright 2026 getmcpads. SPDX-License-Identifier: Apache-2.0 */
 import {createHash} from "node:crypto";
 import {z} from 'zod';
 import type {ToolShape} from '../../tool-quality.js';
@@ -27,6 +27,7 @@ const summaries:Record<string,string>={
  identity_type:'TikTok identity type. Spark Ads require an authorized TikTok identity/post; CUSTOM eligibility varies.',
  identity_id:'Authorized identity ID accessible to this advertiser.',tiktok_item_id:'Authorized TikTok post ID for Spark Ads. A media-library video ID cannot substitute for it.',
  image_ids:'Uploaded TikTok image IDs, not URLs.',video_id:'Uploaded TikTok video ID, not a preview URL.',
+ music_id:'For CAROUSEL_ADS, use a carousel-compatible music_id from tiktok_get_carousel_music for these exact images. Generic CREATIVE_ASSET library music is not interchangeable.',
  request_id:'Caller-generated unique request identifier. Preserve it when reconciling an uncertain outcome; do not blindly retry.',
 };
 function modelSchema(model:string):z.ZodObject<any>{
@@ -84,12 +85,21 @@ function validateSettings(p:Row,a:Row,create:boolean,level:string){
  checkMoney(p);
  for(const k of ['schedule_start_time','schedule_end_time'])if(p[k])p[k]=utc(p[k]);
  if(p.schedule_start_time&&p.schedule_end_time&&p.schedule_end_time<=p.schedule_start_time)throw new Error('Schedule end must be after start.');
+ if(p.schedule_type!==undefined&&!['SCHEDULE_START_END','SCHEDULE_FROM_NOW'].includes(p.schedule_type))throw new Error('Use SCHEDULE_START_END or SCHEDULE_FROM_NOW.');
  if(create&&level==='adgroup'&&p.schedule_type==='SCHEDULE_START_END'&&!p.schedule_end_time)throw new Error('SCHEDULE_START_END requires an end time.');
- if(p.dayparting&&!/^[01]{336}$/.test(p.dayparting))throw new Error('dayparting must contain exactly 336 binary slots.');
+ if(create&&level==='adgroup'&&p.budget_mode==='BUDGET_MODE_TOTAL'&&(!p.schedule_end_time||p.schedule_type!=='SCHEDULE_START_END'))throw new Error('An ad group lifetime budget requires a bounded SCHEDULE_START_END.');
+ if(p.budget!==undefined&&!(p.budget>0))throw new Error('budget must be positive; omit it for a campaign-owned group or unlimited campaign.');
+ if(p.budget_mode!==undefined&&!['BUDGET_MODE_DAY','BUDGET_MODE_TOTAL','BUDGET_MODE_INFINITE','BUDGET_MODE_DYNAMIC_DAILY_BUDGET'].includes(p.budget_mode))throw new Error('Unsupported budget_mode.');
+ if(p.dayparting!==undefined&&!/^[01]{336}$/.test(p.dayparting))throw new Error('dayparting must contain exactly 336 binary slots.');
+ if(p.dayparting!==undefined&&!p.dayparting.includes('1'))throw new Error('All-zero dayparting means full-time delivery in TikTok. Use all ones explicitly for full-time or select the intended slots.');
  if(p.bid_type==='BID_TYPE_NO_BID'&&Number(p.bid_price)>0)throw new Error('Automatic bidding cannot include a bid price.');
  const billing:Record<string,string>={CLICK:'CPC',CONVERT:'OCPM',REACH:'CPM',SHOW:'CPM',ENGAGED_VIEW:'CPV',ENGAGED_VIEW_FIFTEEN:'CPV',INSTALL:'OCPM',VALUE:'OCPM',LEAD_GENERATION:'OCPM',TRAFFIC_LANDING_PAGE_VIEW:'OCPM'};
  if(p.optimization_goal&&p.billing_event&&billing[p.optimization_goal]&&billing[p.optimization_goal]!==p.billing_event)throw new Error(`The billing event for ${p.optimization_goal} must be ${billing[p.optimization_goal]}.`);
  if(create&&level==='adgroup'&&!(p.location_ids?.length||p.targeting_spec?.location_ids?.length))throw new Error('Explicit location targeting is required; no geography is assumed.');
+ const targeting=p.targeting_spec??p;
+ if(targeting.location_ids!==undefined&&(!targeting.location_ids.length||targeting.location_ids.some((v:unknown)=>typeof v!=='string'||!/^\d+$/.test(v))))throw new Error('Use nonempty native numeric location IDs.');
+ const excluded=new Set(targeting.excluded_audience_ids??[]);
+ if((targeting.audience_ids??[]).some((v:string)=>excluded.has(v)))throw new Error('The same audience cannot be included and excluded.');
  const creatives=p.creatives||p.creative_list?.map((x:Row)=>x.creative_info)||[];
  if(level==='ad'&&create&&!creatives.length)throw new Error('Supply at least one creative.');
  for(const c of creatives){
@@ -105,11 +115,32 @@ export const TIKTOK_EXTENDED_WRITES=[
  'tiktok_create_campaign_advanced','tiktok_update_campaign_configuration','tiktok_create_adgroup','tiktok_update_adgroup_configuration','tiktok_create_ads','tiktok_update_ads',
  'tiktok_create_smart_plus_campaign','tiktok_update_smart_plus_campaign','tiktok_create_smart_plus_adgroup','tiktok_update_smart_plus_adgroup','tiktok_create_smart_plus_ad','tiktok_update_smart_plus_ad',
  'tiktok_update_ad_status','tiktok_update_smart_plus_campaign_status','tiktok_update_smart_plus_adgroup_status','tiktok_update_smart_plus_ad_status','tiktok_update_smart_plus_material_status',
- 'tiktok_rename_campaign','tiktok_rename_adgroup','tiktok_rename_ad','tiktok_upload_ad_image','tiktok_upload_ad_video',
+ 'tiktok_rename_campaign','tiktok_rename_adgroup','tiktok_rename_ad','tiktok_upload_ad_image','tiktok_upload_ad_video','tiktok_create_custom_identity','tiktok_create_cta_portfolio',
 ];
 export function registerTikTokExtendedWrites(c:Collector,config:Record<string,string>,readOnly=false){
  const api=tiktokWriteApi(config);
  if(readOnly){
+  const carouselShape={advertiserId:id,imageIds:z.array(z.string().min(1).max(200)).min(1).max(35).refine(v=>new Set(v).size===v.length,'Use distinct carousel images.').describe('Ordered list of 1-35 distinct uploaded image IDs owned by this advertiser. Use the exact same images in the approved carousel.')};
+  c.tool('tiktok_get_carousel_music','Get TikTok music recommendations for exactly the uploaded images in a standard, non-catalog image ad (one card) or carousel. Verifies each image is carousel-usable. Read-only; select a returned music_id in the approval preview and use the same images in the ad. Music is for use on TikTok only.',carouselShape,async raw=>{
+   try{const a=z.object(carouselShape).strict().parse(raw);api.scope(a.advertiserId);
+    const result=await api.call('file/image/ad/info/','GET',{advertiser_id:a.advertiserId,image_ids:a.imageIds});
+    const images=a.imageIds.map(imageId=>{const row=(result.data?.list??[]).find((v:Row)=>v.image_id===imageId);if(!row||row.is_carousel_usable!==true||typeof row.image_url!=='string'||!row.image_url.startsWith('https://'))throw new Error('Every selected image must be ready and carousel-usable in this advertiser. Recheck image information before creating the carousel.');return row;});
+    // Ad creation supports one card, but the music recommender requires at
+    // least two URL entries. Repeat the same image only for recommendations;
+    // the approved ad and returned imageIds keep exactly one image.
+    const urls=images.map(v=>v.image_url);
+    const music=await api.call('file/music/get/','GET',{advertiser_id:a.advertiserId,music_scene:'CAROUSEL_ADS',search_type:'SEARCH_BY_RECOMMEND',filtering:{image_urls:urls.length===1?[urls[0],urls[0]]:urls}});
+    return output({imageIds:a.imageIds,musicScene:'CAROUSEL_ADS',singleImageRepeatedForRecommendation:urls.length===1,musics:(music.data?.musics??[]).map((m:Row)=>({music_id:m.music_id,name:m.name??m.file_name,author:m.author,duration:m.duration})),requestId:music.request_id});
+   }catch(e){return output({error:(e as Error).message},true);}
+  });
+  const mediaShape={advertiserId:id,videoId:z.string().min(1).max(200).describe('Exact uploaded video ID returned by TikTok.')};
+  c.tool('tiktok_get_uploaded_video','Read one uploaded video from this advertiser’s media library. Returns ready only after its media information is available with positive duration and dimensions. Does not upload again.',mediaShape,async raw=>{
+   try{const a=z.object(mediaShape).strict().parse(raw);api.scope(a.advertiserId);
+    const result=await api.call('file/video/ad/info/','GET',{advertiser_id:a.advertiserId,video_ids:[a.videoId]});
+    const video=(result.data?.list??[]).find((v:Row)=>String(v.video_id)===a.videoId);
+    return output({videoId:a.videoId,ready:Boolean(video&&Number(video.duration)>0&&Number(video.width)>0&&Number(video.height)>0),video:video??null});
+   }catch(e){return output({error:(e as Error).message},true);}
+  });
   const shape={advertiserId:id,level:z.enum(['campaign','adgroup','ad']).describe('Entity level to inspect.'),entityId:id,smartPlus:z.boolean().optional().describe('Use the dedicated upgraded Smart+ endpoints rather than classic endpoints.')};
   c.tool('tiktok_get_write_context','Read the exact TikTok entity, parent settings and advertiser currency/timezone before editing or building a new configuration. Read-only.',shape,async raw=>{
    try{const a=z.object(shape).strict().parse(raw);const account=await api.info(a.advertiserId);const entity=await api.entity(a.advertiserId,a.level,a.entityId,a.smartPlus);const parents:Row={};
@@ -119,7 +150,7 @@ export function registerTikTokExtendedWrites(c:Collector,config:Record<string,st
    }catch(e){return output({error:(e as Error).message},true);}
   });return;
  }
- type Plan={path:string,payload:Row,file?:{field:string,name:string,bytes:Uint8Array,mime:string},scope?:()=>Promise<void>,verify?:(data:Row)=>Promise<unknown>};
+ type Plan={path:string,payload:Row,file?:{field:string,name:string,bytes:Uint8Array,mime:string},mediaKind?:'image'|'video',scope?:()=>Promise<void>,verify?:(data:Row)=>Promise<unknown>};
  function register(name:string,description:string,shape:ToolShape,build:(a:Row)=>Plan){
   const schema=z.object({advertiserId:id,...shape,...modes}).strict();
   c.tool(name,description+' Local preview by default. No automatic retry; advertiser ownership is checked before applying.',schema.shape,async raw=>{
@@ -128,10 +159,29 @@ export function registerTikTokExtendedWrites(c:Collector,config:Record<string,st
     const account=await api.info(a.advertiserId);if(a.currency&&account.currency!==a.currency)throw new Error(`Advertiser currency is ${account.currency}, not ${a.currency}. Nothing was changed.`);
     await p.scope?.();const result=await api.call(p.path,'POST',{advertiser_id:a.advertiserId,...p.payload},p.file);
     let verification;try{if(p.verify)verification=await p.verify(result.data);}catch{verification={confirmed:false,message:'Write acknowledged, but readback failed. Reconcile the returned IDs; do not recreate.'};}
-    return output({applied:true,action:name,environment:api.environment,result:result.data,requestId:result.request_id,verification});
+    // The real sandbox returns video uploads as an array; image uploads and other
+    // API variants return an object or {list}. Preserve the native receipt and
+    // expose one stable, unambiguous media ID for approved downstream API calls.
+    let media;
+    if(p.mediaKind){
+     const rows=Array.isArray(result.data)?result.data:Array.isArray(result.data?.list)?result.data.list:[result.data];
+     const mediaId=rows.length===1?rows[0]?.[`${p.mediaKind}_id`]:undefined;
+     media={kind:p.mediaKind,...(typeof mediaId==='string'&&mediaId.length?{id:mediaId}:{unresolved:true})};
+    }
+    return output({applied:true,action:name,environment:api.environment,result:result.data,requestId:result.request_id,verification,...(media?{media}:{})});
    }catch(error){const e=error as Error&{code?:number,requestId?:string,outcome?:string};return output({error:e.message,code:e.code,requestId:e.requestId,outcome:e.outcome||'not_applied',retrySafe:false},true);}
   });
  }
+ register('tiktok_create_cta_portfolio','Create a dynamic CTA portfolio from the exact approved recommendations returned by creative/cta/recommend for this advertiser. Use its result.creative_portfolio_id as ad_configuration.call_to_action_id for Smart+ Spark website/app ads. Creates no ad and changes no delivery status.',{
+  portfolioContent:z.array(z.object({asset_content:z.string().min(1).max(200).describe('Exact recommended CTA text, such as Learn More.'),asset_ids:z.array(id).min(1).max(100).describe('Exact asset_ids returned with this CTA text for this advertiser.')}).strict()).min(1).max(20).describe('Reviewed CTA texts and their advertiser-specific IDs. Obtain them through tiktok_get_read_endpoint at creative/cta/recommend; never substitute generic CTA enums.'),
+ },a=>({path:'creative/portfolio/create/',payload:{creative_portfolio_type:'CTA',portfolio_content:a.portfolioContent}}));
+ register('tiktok_create_custom_identity','Create an advertiser-owned CUSTOMIZED_USER advertising identity for Pangle or Global App Bundle. Does not create a public TikTok profile or enable delivery. Custom identities cannot be used for new TikTok-placement ads. Uses TikTok’s default avatar.',{
+  displayName:z.string().trim().min(1).max(100).describe('Exact public-facing advertising identity name approved by the user. This is not an ad or campaign name.'),
+ },a=>({path:'identity/create/',payload:{display_name:a.displayName},verify:async data=>{
+  const result=await api.call('identity/get/','GET',{advertiser_id:a.advertiserId,identity_type:'CUSTOMIZED_USER',page_size:100});
+  const identity=(result.data?.identity_list??[]).find((v:Row)=>v.identity_id===data.identity_id);
+  return {confirmed:Boolean(identity&&identity.display_name===a.displayName),identity:identity??null};
+ }}));
  for(const smart of [false,true])for(const level of ['campaign','adgroup','ad'] as const)for(const create of [true,false]){
   const cap=level==='adgroup'?'Adgroup':level==='campaign'?'Campaign':'Ad';
   const model=`${smart?'SmartPlus':''}${cap}${create?'Create':'Update'}Body`;
@@ -161,8 +211,13 @@ export function registerTikTokExtendedWrites(c:Collector,config:Record<string,st
     }}
     if(p.adgroup_id){const group=await api.entity(a.advertiserId,'adgroup',p.adgroup_id,smart);
      if(!create&&level==='adgroup'){
-      if(p.budget!==undefined){const parent=await api.entity(a.advertiserId,'campaign',String(group.campaign_id),smart);if(parent.budget_optimize_on)throw new Error('Campaign budget optimization is enabled; edit the campaign budget instead.');}
-      const merged={...group,...p};if(merged.schedule_start_time&&merged.schedule_end_time&&merged.schedule_end_time<=merged.schedule_start_time)throw new Error('Resulting end time must follow the existing start time.');}
+      if(p.budget!==undefined||p.budget_mode!==undefined){const parent=await api.entity(a.advertiserId,'campaign',String(group.campaign_id),smart);if(parent.budget_optimize_on)throw new Error('Campaign budget optimization is enabled; edit the campaign budget instead.');if(parent.budget_mode==='BUDGET_MODE_DAY'&&p.budget_mode==='BUDGET_MODE_TOTAL')throw new Error('A daily-budget campaign requires daily-budget ad groups.');}
+      const merged={...group,...p};if(merged.schedule_start_time&&merged.schedule_end_time&&merged.schedule_end_time<=merged.schedule_start_time)throw new Error('Resulting end time must follow the existing start time.');
+      if(merged.schedule_type==='SCHEDULE_START_END'&&!merged.schedule_end_time)throw new Error('SCHEDULE_START_END requires an end time.');
+      if(merged.budget_mode==='BUDGET_MODE_TOTAL'&&(!merged.schedule_end_time||merged.schedule_type!=='SCHEDULE_START_END'))throw new Error('An ad group lifetime budget requires a bounded SCHEDULE_START_END.');
+      if(merged.bid_type==='BID_TYPE_NO_BID'&&Number(merged.bid_price)>0)throw new Error('Automatic bidding cannot retain a bid price.');
+      if(p.targeting_spec){const mergedTarget={...group.targeting_spec,...p.targeting_spec};const excluded=new Set(mergedTarget.excluded_audience_ids??[]);if((mergedTarget.audience_ids??[]).some((id:string)=>excluded.has(id)))throw new Error('The resulting audience cannot be included and excluded.');}
+      else if(p.audience_ids||p.excluded_audience_ids){const excluded=new Set(merged.excluded_audience_ids??[]);if((merged.audience_ids??[]).some((id:string)=>excluded.has(id)))throw new Error('The resulting audience cannot be included and excluded.');}}
     }
     if(!create&&level==='ad')for(const adId of smart?[p.smart_plus_ad_id]:(p.creatives||[]).map((x:Row)=>x.ad_id)){
      if(!adId)throw new Error('Every updated creative needs its ad_id.');const ad=await api.entity(a.advertiserId,'ad',adId,smart);if(p.adgroup_id&&String(ad.adgroup_id)!==p.adgroup_id)throw new Error('Ad does not belong to the declared ad group.');
@@ -170,7 +225,7 @@ export function registerTikTokExtendedWrites(c:Collector,config:Record<string,st
    },verify:async(data:Row)=>{
     const ids=create?(level==='ad'&&!smart?data.ad_ids:[data[`${smart&&level==='ad'?'smart_plus_ad':level}_id`]]):(nativeId?[nativeId]:(p.creatives||[]).map((x:Row)=>x.ad_id));
     if(!ids?.length||ids.some((v:unknown)=>!v))return {confirmed:false,message:'No readable object ID returned. Reconcile the advertiser before retrying.'};
-    const entities:Row[]=[];for(const entityId of ids.slice(0,10))entities.push(await api.entity(a.advertiserId,level,String(entityId),smart));
+    const entities:Row[]=[];for(const entityId of ids.slice(0,10))entities.push(await api.entity(a.advertiserId,level,String(entityId),smart,create));
     return {confirmed:ids.length===entities.length&&(!create||entities.every(x=>x.operation_status==='DISABLE')),checked:entities.length,total:ids.length,entities};
    }};
   });
@@ -192,16 +247,16 @@ export function registerTikTokExtendedWrites(c:Collector,config:Record<string,st
   const p:Row=level==='ad'?{creatives:[{ad_id:a.entityId,ad_name:a.name}],patch_update:true}:{[`${level}_id`]:a.entityId,[`${level}_name`]:a.name};
   return {path:`${level}/update/`,payload:p,scope:async()=>{const current=await api.entity(a.advertiserId,level,a.entityId);if(level==='ad')p.adgroup_id=String(current.adgroup_id);},verify:()=>api.entity(a.advertiserId,level,a.entityId)};
  });
- for(const kind of ['image','video'])register(`tiktok_upload_ad_${kind}`,`Import a ${kind} from a public HTTPS media URL or base64 file (up to 5 MiB). TikTok may process it asynchronously; acceptance is not proof the media is ready.`,{
+ for(const kind of ['image','video'] as const)register(`tiktok_upload_ad_${kind}`,`Import a ${kind} from a public HTTPS media URL or base64 file (up to 5 MiB). A single returned media ID is exposed at media.id, with the native receipt preserved in result. TikTok may process it asynchronously; acceptance is not proof the media is ready.`,{
   fileUrl:z.string().url().startsWith('https://').optional().describe('Public URL of the actual media file, not a landing page. Mutually exclusive with bytesBase64.'),
   bytesBase64:z.string().min(4).max(7_000_000).regex(/^[A-Za-z0-9+/]+={0,2}$/).optional().describe('Base64 media bytes without a data-URL prefix. Maximum decoded 5 MiB. The required file checksum is calculated automatically; bytes never appear in previews.'),
-  fileName:z.string().min(1).max(100).describe('Uploaded filename including extension. This is not an ad name.'),
+  fileName:z.string().min(1).max(100).describe('Advertiser-unique uploaded filename including extension, separate from the business ad name. Prefer a stable upload UUID suffix; preserve it on retries. If the material already exists, resolve and reuse its owned native ID instead of uploading the same filename again.'),
  },a=>{
   if(Number(!!a.fileUrl)+Number(!!a.bytesBase64)!==1)throw new Error('Supply exactly one of fileUrl or bytesBase64.');
-  if(a.fileUrl)return {path:`file/${kind}/ad/upload/`,payload:{upload_type:'UPLOAD_BY_URL',file_name:a.fileName,[`${kind}_url`]:a.fileUrl}};
+  if(a.fileUrl)return {path:`file/${kind}/ad/upload/`,mediaKind:kind,payload:{upload_type:'UPLOAD_BY_URL',file_name:a.fileName,[`${kind}_url`]:a.fileUrl}};
   let bytes:Uint8Array;try{bytes=Uint8Array.from(atob(a.bytesBase64),c=>c.charCodeAt(0));}catch{throw new Error('Invalid base64 file.');}
   if(bytes.length>5*1024*1024)throw new Error('File exceeds 5 MiB. Use a public media URL for larger files.');
   const signature=createHash('md5').update(bytes).digest('hex');
-  return {path:`file/${kind}/ad/upload/`,payload:{upload_type:'UPLOAD_BY_FILE',file_name:a.fileName,[`${kind}_signature`]:signature},file:{field:`${kind}_file`,name:a.fileName,bytes,mime:kind==='video'?'video/mp4':a.fileName.toLowerCase().endsWith('.png')?'image/png':'image/jpeg'}};
+  return {path:`file/${kind}/ad/upload/`,mediaKind:kind,payload:{upload_type:'UPLOAD_BY_FILE',file_name:a.fileName,[`${kind}_signature`]:signature},file:{field:`${kind}_file`,name:a.fileName,bytes,mime:kind==='video'?'video/mp4':a.fileName.toLowerCase().endsWith('.png')?'image/png':'image/jpeg'}};
  });
 }
